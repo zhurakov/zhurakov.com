@@ -1,0 +1,236 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+  font-family: "Press Start 2P", monospace;
+  color: #fff;
+}
+
+body {
+  position: relative;
+  overflow: hidden;
+  background: #000;
+}
+
+.music-room__video {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  filter: saturate(0.92) contrast(1.08) brightness(0.78);
+  pointer-events: none;
+}
+
+.music-room::before {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  content: "";
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.2),
+      rgba(0, 0, 0, 0.08) 46%,
+      rgba(0, 0, 0, 0.64)
+    ),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.04) 0,
+      rgba(255, 255, 255, 0.04) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+  pointer-events: none;
+}
+
+.music-room {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  min-height: 100vh;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 5rem 1rem 7.25rem;
+  text-align: center;
+}
+
+.music-room__panel {
+  width: min(520px, 100%);
+  padding: 0;
+  text-shadow: 0 3px 18px rgba(0, 0, 0, 0.78);
+}
+
+.music-room h1 {
+  color: #fffcf5;
+  font-size: clamp(1.7rem, 8vw, 3.2rem);
+  line-height: 1.05;
+}
+
+.music-room__meter {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 5px;
+  width: min(320px, 78vw);
+  height: 44px;
+  align-items: end;
+  margin: 1.4rem auto 1.3rem;
+}
+
+.music-room__meter i {
+  height: 11px;
+  border-radius: 2px 2px 0 0;
+  background: #e37fd3;
+  box-shadow: 0 0 18px rgba(227, 127, 211, 0.45);
+  transform-origin: bottom;
+  animation: room-meter 1.2s ease-in-out infinite;
+  animation-play-state: paused;
+}
+
+.music-room__meter.playing i {
+  animation-play-state: running;
+}
+
+.music-room__meter i:nth-child(2n) {
+  background: #389984;
+  animation-duration: 0.78s;
+}
+
+.music-room__meter i:nth-child(3n) {
+  background: #b85212;
+  animation-duration: 1.55s;
+}
+
+.music-room__meter i:nth-child(4n) {
+  animation-delay: -0.24s;
+}
+
+.play-button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 24px;
+  color: #021b20;
+  background-color: #389984;
+  border: 0;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.play-button:hover,
+.play-button:focus-visible {
+  background: #53c3aa;
+  outline: none;
+}
+
+.play-button.playing {
+  color: #fff;
+  background-color: #b85212;
+}
+
+footer {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 9;
+  padding: 4px 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+footer .brand-label img {
+  height: 32px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+footer .github-footer-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0.2rem 0.45rem;
+  border: 1px solid rgba(195, 204, 175, 0.45);
+  border-radius: 6px;
+  background: rgba(255, 252, 245, 0.08);
+}
+
+footer .github-footer-link img {
+  display: block;
+  width: 78px;
+  height: auto;
+}
+
+footer a.cc-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+footer img.cc-icon {
+  max-width: 1em;
+  max-height: 1em;
+  margin-left: 0.2em;
+  vertical-align: middle;
+}
+
+footer p {
+  margin: 0;
+}
+
+@keyframes room-meter {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+  }
+
+  50% {
+    transform: scaleY(2.9);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .music-room__video {
+    display: none;
+  }
+
+  .music-room__meter i {
+    animation: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .music-room__video {
+    object-position: 20% center;
+  }
+
+  .music-room {
+    align-items: flex-start;
+    padding: calc(6rem + env(safe-area-inset-top)) 1rem 8rem;
+  }
+
+  .play-button {
+    padding: 8px 18px;
+    font-size: 0.6rem;
+  }
+
+  footer .brand-label img {
+    height: 24px;
+  }
+}

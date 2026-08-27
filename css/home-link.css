@@ -1,0 +1,44 @@
+.home-link {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  z-index: 30;
+  display: block;
+  padding: 0;
+  color: #c3ccaf;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  font-family: "Press Start 2P", monospace;
+  font-size: 0.85rem;
+  font-weight: normal;
+  letter-spacing: 0;
+  line-height: normal;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.home-link:link,
+.home-link:visited {
+  color: #c3ccaf;
+}
+
+.home-link:hover {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.home-link:focus-visible {
+  border-radius: 2px;
+  outline: 3px solid #e37fd3;
+  outline-offset: 5px;
+}
+
+@media (max-width: 640px) {
+  .home-link {
+    top: 1rem;
+    left: 1rem;
+    font-size: 0.62rem;
+  }
+}

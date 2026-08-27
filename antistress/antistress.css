@@ -1,0 +1,74 @@
+@font-face {
+  font-family: "Press Start 2P";
+  src: url("../fonts/Press_Start_2P/PressStart2P-Regular.ttf");
+}
+
+:root {
+  color: #f3f8e6;
+  background: #02050d;
+  font-family: "Press Start 2P", monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; margin: 0; overflow: hidden; }
+
+canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+
+.antistress-header, .antistress-panel, footer {
+  position: fixed;
+  z-index: 1;
+  font-size: clamp(0.56rem, 1.4vw, 0.76rem);
+  line-height: 1.8;
+  text-shadow: 0 1px 14px #02050d, 0 1px 5px #02050d;
+}
+
+.antistress-header {
+  inset: 1.5rem 1.5rem auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.antistress-header p { margin: 0; letter-spacing: 0.08em; }
+
+a { color: #d7f3bd; text-decoration: none; }
+a:hover { color: #ffffff; text-decoration: underline; }
+a:focus-visible, button:focus-visible { outline: 3px solid #e37fd3; outline-offset: 4px; }
+
+.antistress-panel {
+  left: 1.5rem;
+  bottom: 1.5rem;
+  max-width: min(22rem, calc(100vw - 3rem));
+}
+
+.antistress-panel p { margin: 0 0 0.75rem; }
+
+.antistress-controls { display: flex; flex-wrap: wrap; gap: 0.65rem; }
+
+button {
+  padding: 0.7rem 0.8rem;
+  border: 2px solid #d7f3bd;
+  color: #02050d;
+  background: #d7f3bd;
+  font: inherit;
+  font-size: 0.61rem;
+  cursor: pointer;
+}
+
+button:hover { color: #02050d; background: #ffffff; border-color: #ffffff; }
+
+footer { right: 1.5rem; bottom: 1.5rem; max-width: min(26rem, calc(100vw - 3rem)); text-align: right; }
+footer p { margin: 0; }
+
+@media (max-width: 640px) {
+  .antistress-header { inset: 1rem 1rem auto; }
+  .antistress-panel { left: 1rem; bottom: 3.8rem; }
+  footer { right: 1rem; bottom: 1rem; text-align: left; font-size: 0.5rem; }
+  button { font-size: 0.54rem; padding: 0.65rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  canvas { visibility: hidden; }
+  body::before { content: "Motion is reduced in your system settings."; position: fixed; inset: 50% 1rem auto; text-align: center; transform: translateY(-50%); }
+}

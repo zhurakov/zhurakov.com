@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Antistress — Nikita Zhurakov</title>
+    <meta name="description" content="An interactive WebGL fluid simulation. Touch, drag, and slow down." />
+    <meta name="theme-color" content="#02050d" />
+    <link rel="canonical" href="https://zhurakov.com/antistress/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Zhurakov" />
+    <meta property="og:title" content="Antistress" />
+    <meta property="og:description" content="Touch, drag, and slow down." />
+    <meta property="og:url" content="https://zhurakov.com/antistress/" />
+    <meta property="og:image" content="https://zhurakov.com/images/whoami.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Antistress" />
+    <meta name="twitter:description" content="Touch, drag, and slow down." />
+    <meta name="twitter:image" content="https://zhurakov.com/images/whoami.png" />
+    <link rel="icon" href="../images/favicon.ico" sizes="any" />
+    <link rel="icon" href="../images/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="../images/favicon-512.png" type="image/png" sizes="512x512" />
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png" />
+    <link rel="stylesheet" href="antistress.css" />
+    <script src="../js/analytics-consent.js" data-ga-id="G-DEYFTK64Q3" data-privacy-url="../privacy.html" defer></script>
+  </head>
+  <body>
+    <canvas aria-label="Interactive fluid simulation"></canvas>
+
+    <header class="antistress-header">
+      <a href="../index.html">← Home</a>
+      <p>ANTISTRESS</p>
+    </header>
+
+    <main class="antistress-panel">
+      <p>Touch or drag the fluid.</p>
+      <div class="antistress-controls">
+        <button id="fluid-splat" type="button">Surprise me</button>
+        <button id="fluid-pause" type="button" aria-pressed="false">Pause</button>
+      </div>
+    </main>
+
+    <footer>
+      <p>
+        Simulation by <a href="https://github.com/PavelDoGreat/WebGL-Fluid-Simulation">Pavel Dobryakov</a>
+        · <a href="../licenses/webgl-fluid-simulation-MIT.txt">MIT License</a>
+      </p>
+    </footer>
+
+    <script src="fluid.js"></script>
+    <script>
+      const pauseButton = document.querySelector('#fluid-pause');
+      const splatButton = document.querySelector('#fluid-splat');
+
+      pauseButton.addEventListener('click', () => {
+        config.PAUSED = !config.PAUSED;
+        pauseButton.textContent = config.PAUSED ? 'Resume' : 'Pause';
+        pauseButton.setAttribute('aria-pressed', String(config.PAUSED));
+      });
+
+      splatButton.addEventListener('click', () => {
+        splatStack.push(Math.floor(Math.random() * 16) + 8);
+      });
+    </script>
+  </body>
+</html>

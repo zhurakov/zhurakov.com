@@ -1,0 +1,21 @@
+# Hello World
+
+Hello World is an open-source web playground by Nikita Zhurakov. It is built with plain HTML, CSS, and a little JavaScript.
+
+## Important pages
+
+- Home: https://zhurakov.com/
+- Projects: https://zhurakov.com/posts/projects.html
+- Link Library: https://zhurakov.com/posts/links.html
+- Games: https://zhurakov.com/posts/games.html
+- Privacy: https://zhurakov.com/privacy.html
+
+## Link Library
+
+The Link Library is a collection of websites, services, and projects worth sharing. Inclusion does not imply that Nikita uses, endorses, or is affiliated with a listed project.
+
+## Contact and source
+
+- GitHub: https://github.com/zhurakov
+- Site source: https://github.com/zhurakov/zhurakov.com
+- License: CC BY-SA 4.0

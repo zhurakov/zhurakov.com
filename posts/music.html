@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lofi Room</title>
+    <meta
+      name="description"
+      content="A quiet lofi-inspired music room."
+    />
+    <meta name="theme-color" content="#000000" />
+    <link
+      rel="canonical"
+      href="https://zhurakov.com/posts/music.html"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Hello World" />
+    <meta property="og:title" content="Lofi Room" />
+    <meta
+      property="og:description"
+      content="A quiet lofi-inspired music room."
+    />
+    <meta
+      property="og:url"
+      content="https://zhurakov.com/posts/music.html"
+    />
+    <meta
+      property="og:image"
+      content="https://zhurakov.com/images/whoami.png"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Lofi Room" />
+    <meta
+      name="twitter:description"
+      content="A quiet lofi-inspired music room."
+    />
+    <meta
+      name="twitter:image"
+      content="https://zhurakov.com/images/whoami.png"
+    />
+    <link rel="icon" href="../images/favicon.ico" sizes="any" />
+    <link rel="icon" href="../images/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="../images/favicon-512.png" type="image/png" sizes="512x512" />
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="stylesheet" href="../css/music.css" />
+    <link rel="stylesheet" href="../css/home-link.css" />
+    <script
+      src="../js/analytics-consent.js"
+      data-ga-id="G-DEYFTK64Q3"
+      data-privacy-url="../privacy.html"
+      defer
+    ></script>
+    <script src="../js/site-player.js" defer></script>
+  </head>
+
+  <body data-site-page="music">
+    <a class="home-link" href="../index.html">← Home</a>
+
+    <video
+      id="musicRoomVideo"
+      class="music-room__video"
+      autoplay
+      loop
+      muted
+      playsinline
+      preload="metadata"
+    >
+      <source
+        src="../video/lofi-room.mp4"
+        type="video/mp4"
+      />
+      <source
+        src="https://coderadio.freecodecamp.org/static/media/Saron3.cb9bbffcf0eaef69b98b.webm"
+        type="video/webm"
+      />
+    </video>
+
+    <main class="music-room" aria-labelledby="music-room-title">
+      <div class="music-room__panel">
+        <h1 id="music-room-title">Lofi room</h1>
+        <div class="music-room__meter" aria-hidden="true">
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i>
+        </div>
+        <button class="play-button" id="musicRoomToggle" type="button">
+          Play radio
+        </button>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-row">
+        <a href="../index.html" class="brand-label">
+          <picture>
+            <source srcset="../images/indie-coder.webp" type="image/webp" />
+            <img src="../images/indie-coder.png" alt="Whoami brand" width="92" height="48" decoding="async" />
+          </picture>
+        </a>
+
+        <a
+          class="github-footer-link"
+          href="https://github.com/zhurakov/zhurakov.com"
+          rel="me"
+        >
+          <img src="../images/github-lockup-white.svg" alt="GitHub" width="86" height="20" />
+        </a>
+
+        <p class="copyright">
+          <a
+            class="cc-link"
+            rel="license"
+            href="https://creativecommons.org/licenses/by-sa/4.0/"
+          >
+            CC BY-SA 4.0
+          </a>
+          <img
+            class="cc-icon"
+            src="../images/cc/cc.svg"
+            alt="CC"
+          />
+          <img
+            class="cc-icon"
+            src="../images/cc/by.svg"
+            alt="BY"
+          />
+          <img
+            class="cc-icon"
+            src="../images/cc/sa.svg"
+            alt="SA"
+          />
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
