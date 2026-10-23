@@ -1,0 +1,310 @@
+.hero-art .chair-cover {
+  position: absolute;
+  top: 25%;
+  left: 0;
+  width: 27%;
+  height: 18%;
+  background: #021b20;
+}
+.hero-art .chair-patch {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(25% 73% 57% 0);
+}
+.hero-art .parked-robot {
+  position: absolute;
+  left: 52%;
+  top: 78%;
+  width: 100px;
+  height: 88px;
+  transform: translate(-50%, -50%);
+  background: url(/images/robot-guide/robot-motion.webp) no-repeat -200px 0 / 900px 88px;
+  image-rendering: pixelated;
+}
+.hero-art .parked-robot canvas {
+  width: 100px;
+  height: 88px;
+  display: block;
+  image-rendering: pixelated;
+}
+.hero-art .boy-eyes {
+  position: absolute;
+  left: 35.287081%;
+  top: 24.973433%;
+  width: 11.961722%;
+  height: 7.970244%;
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+.hero-art.awake .parked-robot {
+  visibility: hidden;
+}
+.wake-target {
+  position: absolute;
+  left: 39%;
+  top: 61%;
+  width: 31%;
+  height: 37%;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+.wake-target:focus-visible {
+  outline: 3px dashed #61f7ed;
+  outline-offset: 3px;
+}
+.hero-art.awake .wake-target {
+  display: none;
+}
+.robot-stage {
+  position: relative;
+  height: 0;
+  max-width: 800px;
+  margin: 0 auto;
+}
+body.started .robot-stage {
+  height: auto;
+  min-height: 520px;
+  padding-bottom: 24px;
+}
+.robot-dock {
+  position: absolute;
+  top: 135px;
+  left: 50%;
+  width: 150px;
+  height: 115px;
+  transform: translateX(-50%);
+}
+#driving-robot {
+  position: fixed;
+  z-index: 20;
+  width: 100px;
+  height: 88px;
+  image-rendering: pixelated;
+  opacity: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 3px 3px rgba(0, 0, 0, .35));
+}
+#driving-robot.visible {
+  opacity: 1;
+}
+#driving-robot.idle {
+  cursor: pointer;
+  pointer-events: auto;
+}
+#driving-robot:focus-visible {
+  outline: 2px dashed #61f7ed;
+  outline-offset: 3px;
+}
+.conversation {
+  position: relative;
+  top: 0;
+  left: auto;
+  width: min(680px, calc(100vw - 32px));
+  margin: 0 auto;
+  transform: translateY(14px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .4s, transform .4s;
+  color: #60fbf1;
+}
+.conversation.open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.speech {
+  display: inline-block;
+  border: 2px solid #55e6e8;
+  padding: 16px 20px;
+  max-width: 95%;
+  min-height: 76px;
+  max-height: 110px;
+  overflow: auto;
+  font-size: clamp(10px, 1.2vw, 14px);
+  line-height: 1.8;
+  box-shadow: 0 0 12px rgba(48, 226, 232, .2);
+  background: #021b20;
+}
+.choices {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 205px;
+  flex-wrap: wrap;
+}
+.choices button,
+#ask-form button {
+  font: inherit;
+  color: #60fbf1;
+  border: 2px solid #49e7e9;
+  background: #02252a;
+  cursor: pointer;
+}
+.choices button {
+  min-height: 44px;
+  padding: 14px;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.choices button:hover,
+.choices button:focus-visible,
+#ask-form button:hover {
+  color: #021b20;
+  background: #60fbf1;
+}
+#ask-form {
+  display: flex;
+  margin: 18px auto 0;
+  width: min(620px, 100%);
+  border: 2px solid #53636b;
+  height: 52px;
+  background: #062127;
+}
+#ask-form input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  padding: 0 14px;
+  color: #fff;
+  font: 11px "Press Start 2P", monospace;
+  outline: none;
+}
+#ask-form input::placeholder {
+  color: #95a0a5;
+}
+#ask-form:focus-within {
+  border-color: #60fbf1;
+}
+#ask-form button {
+  border: 0;
+  border-left: 2px solid #53636b;
+  width: 56px;
+  font-size: 24px;
+}
+.close-chat {
+  margin-top: 14px;
+  padding: 8px 12px;
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  color: #95b8b7;
+  font: 9px/1.5 "Press Start 2P", monospace;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.close-chat:hover,
+.close-chat:focus-visible {
+  color: #60fbf1;
+}
+.robot-note {
+  margin-top: 13px;
+  font: 11px/1.5 system-ui, sans-serif;
+  color: #90a0a2;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+body.started #cube {
+  display: none;
+}
+.parked-robot::before,
+.parked-robot::after,
+.idle-lights::before,
+.idle-lights::after {
+  content: "";
+  position: absolute;
+  background: #fff6b0;
+  border-radius: 50%;
+  box-shadow:
+    0 0 4px #fff6b0,
+    0 0 10px #ffdd62,
+    0 0 18px #ff8c2f;
+  mix-blend-mode: screen;
+  animation: robot-headlight-morse 14.76s infinite steps(1, end);
+  pointer-events: none;
+}
+.parked-robot::before {
+  left: 23px;
+  top: 52px;
+  width: 12px;
+  height: 15px;
+  transform: rotate(-17deg);
+  z-index: 1;
+}
+.parked-robot::after {
+  left: 35px;
+  top: 54px;
+  width: 14px;
+  height: 16px;
+  transform: rotate(-17deg);
+  z-index: 1;
+}
+.idle-lights {
+  position: fixed;
+  z-index: 21;
+  width: 100px;
+  height: 88px;
+  display: none;
+  pointer-events: none;
+}
+#driving-robot.idle + .idle-lights {
+  display: block;
+}
+.idle-lights::before {
+  left: 27px;
+  top: 58px;
+  width: 18px;
+  height: 18px;
+}
+.idle-lights::after {
+  left: 56px;
+  top: 58px;
+  width: 18px;
+  height: 18px;
+}
+@media (max-width: 650px) {
+  body.started #menu {
+    padding-left: 112px;
+    padding-right: 12px;
+  }
+  body.started .robot-stage {
+    min-height: 540px;
+  }
+  .choices {
+    gap: 8px;
+  }
+  .choices button {
+    font-size: 9px;
+    padding: 10px;
+  }
+  #ask-form input {
+    font-size: 16px;
+  }
+  .speech {
+    font-size: 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .conversation {
+    transition: none;
+  }
+  .parked-robot::before,
+  .parked-robot::after,
+  .idle-lights::before,
+  .idle-lights::after {
+    animation: none;
+    opacity: 0;
+  }
+}
