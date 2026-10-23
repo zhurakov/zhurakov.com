@@ -276,8 +276,8 @@ body.started #cube {
 }
 @media (max-width: 650px) {
   body.started #menu {
-    padding-left: 112px;
-    padding-right: 12px;
+    position: relative;
+    z-index: 30;
   }
   body.started .robot-stage {
     min-height: 540px;
