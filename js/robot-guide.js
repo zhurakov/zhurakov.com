@@ -131,7 +131,6 @@ async function launch() {
   pagePlace(start);
   renderer.draw(-45, 0);
   hero.classList.add("awake");
-  hero.classList.add("coding");
   robot.classList.add("visible");
   if (!reducedMotion.matches) {
     boy.follow();

@@ -26,78 +26,6 @@
 .hero-art.awake .parked-robot {
   visibility: hidden;
 }
-.laptop-code {
-  position: absolute;
-  left: 75.3%;
-  top: 45.5%;
-  width: 13.4%;
-  height: 14.2%;
-  overflow: hidden;
-  padding: 2.5% 3%;
-  color: #df75ff;
-  background: rgba(9, 12, 24, .58);
-  clip-path: polygon(8% 0, 100% 0, 87% 100%, 0 100%);
-  font: 3.5px/1.72 "Press Start 2P", monospace;
-  letter-spacing: 0;
-  opacity: 0;
-  pointer-events: none;
-}
-.laptop-code__line,
-.laptop-code__status {
-  display: block;
-  transform: scaleX(0);
-  transform-origin: left center;
-  white-space: nowrap;
-}
-.laptop-code__line--boot {
-  color: #f5da4e;
-}
-.laptop-code__line--motor {
-  color: #d976f2;
-}
-.laptop-code__line--drive,
-.laptop-code__status {
-  color: #64f7df;
-}
-.laptop-code__status {
-  margin-top: 1px;
-  font-size: 3px;
-}
-.laptop-code__cursor {
-  display: inline-block;
-  width: 2px;
-  height: 3px;
-  margin-left: 2px;
-  background: #64f7df;
-  opacity: 0;
-}
-.hero-art.coding .laptop-code {
-  opacity: 1;
-}
-.hero-art.coding .laptop-code__line,
-.hero-art.coding .laptop-code__status {
-  animation: laptop-code-type .28s steps(5, end) forwards;
-}
-.hero-art.coding .laptop-code__line--motor {
-  animation-delay: .22s;
-}
-.hero-art.coding .laptop-code__line--drive {
-  animation-delay: .5s;
-}
-.hero-art.coding .laptop-code__status {
-  animation-delay: .82s;
-}
-.hero-art.coding .laptop-code__cursor {
-  animation: laptop-cursor-blink .7s steps(1, end) .8s infinite;
-}
-@keyframes laptop-code-type {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-@keyframes laptop-cursor-blink {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
-}
 .wake-target {
   position: absolute;
   left: 39%;
@@ -361,14 +289,5 @@ body.started #cube {
   .idle-lights::after {
     animation: none;
     opacity: 0;
-  }
-  .hero-art.coding .laptop-code__line,
-  .hero-art.coding .laptop-code__status {
-    animation: none;
-    transform: scaleX(1);
-  }
-  .hero-art.coding .laptop-code__cursor {
-    animation: none;
-    opacity: 1;
   }
 }
