@@ -91,6 +91,12 @@
     <main>
       <div class="hero-art" id="hero">
         <img fetchpriority="high" decoding="sync" class="original-art" src="images/robot-guide/workbench.png" alt="Nikita building a little robot" width="400" height="225">
+        <div class="laptop-code" aria-hidden="true">
+          <span class="laptop-code__line laptop-code__line--boot">boot()</span>
+          <span class="laptop-code__line laptop-code__line--motor">motor.start()</span>
+          <span class="laptop-code__line laptop-code__line--drive">robot.drive()</span>
+          <span class="laptop-code__status">ONLINE</span><span class="laptop-code__cursor"></span>
+        </div>
         <span class="parked-robot" aria-hidden="true"></span>
         <button type="button" id="wake-robot" class="wake-target" aria-label="Wake the robot" title="Click the robot"></button>
       </div>
