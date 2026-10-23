@@ -1,16 +1,3 @@
-.hero-art .chair-cover {
-  position: absolute;
-  top: 25%;
-  left: 0;
-  width: 27%;
-  height: 18%;
-  background: #021b20;
-}
-.hero-art .chair-patch {
-  position: absolute;
-  inset: 0;
-  clip-path: inset(25% 73% 57% 0);
-}
 .hero-art .parked-robot {
   position: absolute;
   left: 52%;
