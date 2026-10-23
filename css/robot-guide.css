@@ -275,10 +275,6 @@ body.started #cube {
   height: 18px;
 }
 @media (max-width: 650px) {
-  body.started #menu {
-    position: relative;
-    z-index: 30;
-  }
   body.started .robot-stage {
     min-height: 540px;
   }
