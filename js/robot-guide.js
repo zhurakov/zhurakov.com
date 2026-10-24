@@ -177,9 +177,6 @@ addEventListener("resize", () => {
 visualViewport?.addEventListener("resize", () => {
   if (parked) requestAnimationFrame(() => pagePlace(dockPoint()));
 });
-document.querySelectorAll("[data-question]").forEach((button) => button.addEventListener("click", () => {
-  answer(button.dataset.question);
-}));
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   const value = input.value.trim();

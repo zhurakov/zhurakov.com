@@ -114,14 +114,6 @@ body.started .robot-stage {
   box-shadow: 0 0 12px rgba(48, 226, 232, .2);
   background: #021b20;
 }
-.choices {
-  display: flex;
-  justify-content: center;
-  gap: 16px;
-  margin-top: 205px;
-  flex-wrap: wrap;
-}
-.choices button,
 #ask-form button {
   font: inherit;
   color: #60fbf1;
@@ -129,21 +121,13 @@ body.started .robot-stage {
   background: #02252a;
   cursor: pointer;
 }
-.choices button {
-  min-height: 44px;
-  padding: 14px;
-  font-size: 11px;
-  line-height: 1.6;
-}
-.choices button:hover,
-.choices button:focus-visible,
 #ask-form button:hover {
   color: #021b20;
   background: #60fbf1;
 }
 #ask-form {
   display: flex;
-  margin: 18px auto 0;
+  margin: 205px auto 0;
   width: min(620px, 100%);
   border: 2px solid #53636b;
   height: 52px;
@@ -264,13 +248,6 @@ body.started #cube {
 @media (max-width: 650px) {
   body.started .robot-stage {
     min-height: 540px;
-  }
-  .choices {
-    gap: 8px;
-  }
-  .choices button {
-    font-size: 9px;
-    padding: 10px;
   }
   #ask-form input {
     font-size: 16px;
