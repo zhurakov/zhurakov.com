@@ -5,7 +5,7 @@ Hello World is an open-source web playground by Nikita Zhurakov. It is built wit
 ## Important pages
 
 - Home: https://zhurakov.com/
-- Projects: https://zhurakov.com/posts/projects.html
+- Pond: https://zhurakov.com/posts/pond.html
 - Link Library: https://zhurakov.com/posts/links.html
 - Games: https://zhurakov.com/posts/games.html
 - Privacy: https://zhurakov.com/privacy.html

@@ -1,0 +1,45 @@
+:root {
+  background: #1a1917;
+}
+
+html,
+body,
+.pond,
+canvas {
+  width: 100%;
+  height: 100%;
+}
+
+html,
+body {
+  margin: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+  background: #1a1917;
+}
+
+body {
+  touch-action: manipulation;
+  cursor: crosshair;
+}
+
+.pond,
+canvas {
+  display: block;
+}
+
+.pond {
+  position: absolute;
+  inset: 0;
+  isolation: isolate;
+}
+
+canvas {
+  image-rendering: pixelated;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    cursor: default;
+  }
+}

@@ -187,7 +187,7 @@ form.addEventListener("submit", (event) => {
 function answer(question) {
   const lower = question.toLowerCase();
   if (/\b(projects?|work|builds?)\b|проект|дела|созда/.test(lower)) {
-    speech.innerHTML = 'Explore <a href="posts/projects.html">Nikita\u2019s projects \u2197</a> \u2014 a collection of experiments and ideas.';
+    speech.innerHTML = 'Visit the <a href="posts/pond.html">koi pond \u2197</a> and feed the fish.';
   } else if (/\b(games?|play)\b|игр/.test(lower)) {
     speech.innerHTML = 'Ready to play? Head over to <a href="posts/games.html">Games \u2197</a>.';
   } else if (/\b(nikita|yourself|who)\b|никит|кто|теб/.test(lower)) {
