@@ -171,11 +171,6 @@ body.started .robot-stage {
 .close-chat:focus-visible {
   color: #60fbf1;
 }
-.robot-note {
-  margin-top: 13px;
-  font: 11px/1.5 system-ui, sans-serif;
-  color: #90a0a2;
-}
 .sr-only {
   position: absolute;
   width: 1px;
@@ -265,6 +260,6 @@ body.started #cube {
   .idle-lights::before,
   .idle-lights::after {
     animation: none;
-    opacity: 0;
+    opacity: 0.82;
   }
 }

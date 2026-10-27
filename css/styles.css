@@ -75,40 +75,17 @@ main {
   width: min(400px, 92vw);
 }
 
+.hero-art picture {
+  display: block;
+  width: 100%;
+}
+
 .hero-art img {
   display: block;
   width: 100%;
   height: auto;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
-}
-
-.robot-light {
-  position: absolute;
-  width: 3.2%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: #fff6b0;
-  box-shadow:
-    0 0 4px #fff6b0,
-    0 0 10px #ffdd62,
-    0 0 18px #ff8c2f;
-  mix-blend-mode: screen;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  opacity: 0.18;
-  filter: brightness(0.45);
-  animation: robot-headlight-morse 14.76s infinite steps(1, end);
-}
-
-.robot-light-left {
-  top: 78.3%;
-  left: 46.5%;
-}
-
-.robot-light-right {
-  top: 79.7%;
-  left: 51.2%;
 }
 
 @keyframes robot-headlight-morse {
@@ -218,13 +195,6 @@ main {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .robot-light {
-    animation: none;
-    opacity: 0.82;
-  }
-}
-
 a:link {
   text-decoration: none;
   color: #858500;
@@ -248,26 +218,6 @@ nav {
   line-height: 1.8;
   padding: 0 1rem;
   overflow-wrap: anywhere;
-}
-
-.support-link:link,
-.support-link:visited {
-  display: inline-block;
-  margin: 0 0.15em;
-  padding: 0 0.3em;
-  color: #e37fd3;
-  border: 2px solid #808000;
-  text-decoration: none;
-}
-
-.support-link:hover,
-.support-link:focus-visible {
-  color: #fff;
-  background-color: #5b123f;
-  border-color: #ff005e;
-  outline: 0;
-  text-decoration: none;
-  text-shadow: 0 0 6px #ff005e, 0 0 12px #ff005e;
 }
 
 .support-note {
@@ -376,6 +326,19 @@ article sub .rubik {
   margin-top: 150px;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .rubik,
+  .rubik span {
+    transition: none;
+  }
+
+  .rubik:hover,
+  .rubik:focus,
+  .rubik:active {
+    transform: perspective(1000px) rotateX(0deg);
+  }
+}
+
 footer {
   padding: 0.35rem 0 0.5rem;
 }
@@ -464,13 +427,6 @@ footer p {
     font-size: clamp(0.82rem, 4.9vw, 1.25rem);
     line-height: 1.7;
     padding: 0;
-  }
-
-  .support-link:link,
-  .support-link:visited {
-    margin: 0 0.1em;
-    padding: 0 0.18em;
-    border-width: 1px;
   }
 
   .support-note {

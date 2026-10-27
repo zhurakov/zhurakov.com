@@ -1064,9 +1064,11 @@ initFramebuffers();
 
 let lastUpdateTime = Date.now();
 let colorUpdateTimer = 0.0;
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
 update();
 
 function update () {
+    if (reduceMotion.matches) return;
     const dt = calcDeltaTime();
     if (resizeCanvas())
         initFramebuffers();
@@ -1077,6 +1079,13 @@ function update () {
     render(null);
     requestAnimationFrame(update);
 }
+
+reduceMotion.addEventListener("change", () => {
+    if (!reduceMotion.matches) {
+        lastUpdateTime = Date.now();
+        update();
+    }
+});
 
 function calcDeltaTime () {
     let now = Date.now();

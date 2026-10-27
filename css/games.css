@@ -100,7 +100,8 @@ body {
   display: flex;
   flex-direction: column;
   background-color: #000;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   font-family: "Press Start 2P", monospace;
   text-align: center;
 }
@@ -109,6 +110,7 @@ body {
   position: fixed;
   inset: 0;
   z-index: 0;
+  overflow: hidden;
   pointer-events: none;
 }
 
@@ -249,4 +251,11 @@ main {
 footer {
   position: relative;
   z-index: 20;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scan-bar,
+  .background-effect li {
+    animation: none;
+  }
 }

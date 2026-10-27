@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pond</title>
+    <title>Pixel koi pond — Nikita Zhurakov</title>
     <meta
       name="description"
-      content="An interactive pixel koi pond."
+      content="Nikita Zhurakov's pixel koi pond. Move the pointer to attract the fish and click to feed them."
     />
     <meta name="theme-color" content="#1a1917" />
     <link
@@ -14,11 +14,11 @@
       href="https://zhurakov.com/posts/pond.html"
     />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Hello World" />
-    <meta property="og:title" content="Pond" />
+    <meta property="og:site_name" content="Zhurakov" />
+    <meta property="og:title" content="Pixel koi pond — Nikita Zhurakov" />
     <meta
       property="og:description"
-      content="An interactive pixel koi pond."
+      content="Nikita Zhurakov's pixel koi pond. Move the pointer to attract the fish and click to feed them."
     />
     <meta
       property="og:url"
@@ -26,28 +26,42 @@
     />
     <meta
       property="og:image"
-      content="https://zhurakov.com/images/whoami.png"
+      content="https://zhurakov.com/images/og.png"
     />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Nikita building a little robot" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Pond" />
+    <meta name="twitter:title" content="Pixel koi pond — Nikita Zhurakov" />
     <meta
       name="twitter:description"
-      content="An interactive pixel koi pond."
+      content="Nikita Zhurakov's pixel koi pond. Move the pointer to attract the fish and click to feed them."
     />
     <meta
       name="twitter:image"
-      content="https://zhurakov.com/images/whoami.png"
+      content="https://zhurakov.com/images/og.png"
     />
     <link rel="icon" href="../images/favicon.ico" sizes="any" />
     <link rel="icon" href="../images/favicon-32.png" type="image/png" sizes="32x32" />
     <link rel="icon" href="../images/favicon-512.png" type="image/png" sizes="512x512" />
     <link rel="apple-touch-icon" href="../images/apple-touch-icon.png" />
+    <link rel="stylesheet" href="../css/home-link.css" />
     <link rel="stylesheet" href="../css/pond.css" />
   </head>
   <body>
+    <a class="home-link" href="../index.html">← Home</a>
     <main class="pond" aria-label="Interactive koi pond">
+      <h1 class="sr-only">Pixel koi pond</h1>
+      <p class="sr-only">
+        Nikita Zhurakov's pixel koi pond. Move the pointer to attract the fish
+        and click to feed them.
+      </p>
       <canvas id="koi-pond" aria-hidden="true"></canvas>
     </main>
+    <p class="pond-credit">
+      Koi by
+      <a href="https://github.com/Dao-Ho/portfolio" target="_blank" rel="noopener noreferrer">Dao Ho</a>
+    </p>
     <script type="module" src="../js/pond-page.js"></script>
   </body>
 </html>

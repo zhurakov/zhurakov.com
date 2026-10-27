@@ -4,6 +4,18 @@
   const button = document.getElementById("musicRoomToggle");
   if (!button) return;
 
+  const roomVideo = document.getElementById("musicRoomVideo");
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+
+  function syncRoomVideo() {
+    if (!roomVideo) return;
+    if (reduceMotion.matches) roomVideo.pause();
+    else roomVideo.play().catch(() => {});
+  }
+
+  syncRoomVideo();
+  reduceMotion.addEventListener("change", syncRoomVideo);
+
   const meter = document.querySelector(".music-room__meter");
   const radioUrl = "https://stream.zeno.fm/0r0xa792kwzuv";
   const audio = new Audio();

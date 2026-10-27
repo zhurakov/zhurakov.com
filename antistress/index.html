@@ -12,11 +12,14 @@
     <meta property="og:title" content="Antistress" />
     <meta property="og:description" content="Touch, drag, and slow down." />
     <meta property="og:url" content="https://zhurakov.com/antistress/" />
-    <meta property="og:image" content="https://zhurakov.com/images/whoami.png" />
+    <meta property="og:image" content="https://zhurakov.com/images/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Nikita building a little robot" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Antistress" />
     <meta name="twitter:description" content="Touch, drag, and slow down." />
-    <meta name="twitter:image" content="https://zhurakov.com/images/whoami.png" />
+    <meta name="twitter:image" content="https://zhurakov.com/images/og.png" />
     <link rel="icon" href="../images/favicon.ico" sizes="any" />
     <link rel="icon" href="../images/favicon-32.png" type="image/png" sizes="32x32" />
     <link rel="icon" href="../images/favicon-512.png" type="image/png" sizes="512x512" />
@@ -52,14 +55,23 @@
       const pauseButton = document.querySelector('#fluid-pause');
       const splatButton = document.querySelector('#fluid-splat');
 
-      pauseButton.addEventListener('click', () => {
-        config.PAUSED = !config.PAUSED;
+      function syncPauseButton() {
         pauseButton.textContent = config.PAUSED ? 'Resume' : 'Pause';
         pauseButton.setAttribute('aria-pressed', String(config.PAUSED));
+      }
+
+      pauseButton.addEventListener('click', () => {
+        config.PAUSED = !config.PAUSED;
+        syncPauseButton();
       });
 
       splatButton.addEventListener('click', () => {
         splatStack.push(Math.floor(Math.random() * 16) + 8);
+      });
+
+      window.addEventListener('keydown', (event) => {
+        if (event.code === 'KeyP') syncPauseButton();
+        if (event.key === ' ') event.preventDefault();
       });
     </script>
   </body>

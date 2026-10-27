@@ -1,14 +1,16 @@
-# Hello World
+# Zhurakov
 
-Hello World is an open-source web playground by Nikita Zhurakov. It is built with plain HTML, CSS, and a little JavaScript.
+Zhurakov (zhurakov.com) is an open-source web playground by Nikita Zhurakov. The homepage headline is "Hello, World!". It is built with plain HTML, CSS, and a little JavaScript.
 
 ## Important pages
 
-- Home: https://zhurakov.com/
-- Pond: https://zhurakov.com/posts/pond.html
-- Link Library: https://zhurakov.com/posts/links.html
-- Games: https://zhurakov.com/posts/games.html
-- Privacy: https://zhurakov.com/privacy.html
+- Home: https://zhurakov.com/ — An open-source web playground with small experiments, games, and useful pages.
+- Pond: https://zhurakov.com/posts/pond.html — Nikita Zhurakov's pixel koi pond. Move the pointer to attract the fish and click to feed them.
+- Link Library: https://zhurakov.com/posts/links.html — A growing personal library of websites and web projects worth sharing.
+- Games: https://zhurakov.com/posts/games.html — A small games page with a retro arcade mood.
+- Music: https://zhurakov.com/posts/music.html — A quiet lofi-inspired music room.
+- Antistress: https://zhurakov.com/antistress/ — An interactive WebGL fluid simulation. Touch, drag, and slow down.
+- Privacy: https://zhurakov.com/privacy.html — How this site uses optional analytics.
 
 ## Link Library
 

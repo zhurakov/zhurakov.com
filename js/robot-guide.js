@@ -186,13 +186,15 @@ form.addEventListener("submit", (event) => {
 });
 function answer(question) {
   const lower = question.toLowerCase();
-  if (/\b(projects?|work|builds?)\b|проект|дела|созда/.test(lower)) {
+  if (/\b(pond|koi|fish(?:es)?)\b|пруд|кои|рыб/.test(lower)) {
     speech.innerHTML = 'Visit the <a href="posts/pond.html">koi pond \u2197</a> and feed the fish.';
+  } else if (/\b(projects?|work|builds?)\b|проект|дела|созда/.test(lower)) {
+    speech.textContent = "There\u2019s no separate projects page. This site is the collection of experiments.";
   } else if (/\b(games?|play)\b|игр/.test(lower)) {
     speech.innerHTML = 'Ready to play? Head over to <a href="posts/games.html">Games \u2197</a>.';
   } else if (/\b(nikita|yourself|who)\b|никит|кто|теб/.test(lower)) {
-    speech.textContent = "You\u2019re on Nikita Zhurakov\u2019s personal site \u2014 a collection of projects, games, and experiments.";
+    speech.textContent = "This is a personal site \u2014 a collection of experiments, games, and small pages.";
   } else {
-    speech.textContent = "Ask me about Nikita, projects, or games. I can help you find your way around the site.";
+    speech.textContent = "Ask me about the pond or games. I can help you find your way around the site.";
   }
 }

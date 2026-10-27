@@ -11,10 +11,16 @@ const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const STEP = 1 / 60;
 const MAX_STEPS = 4;
 let raf = 0;
+let loop = 0;
 let last = 0;
 let accumulator = 0;
-let visible = true;
+let onScreen = true;
+let pageVisible = document.visibilityState !== "hidden";
 let lastPointerTime = 0;
+
+function running() {
+  return onScreen && pageVisible;
+}
 
 function resize() {
   const { width, height } = canvas.getBoundingClientRect();
@@ -38,8 +44,8 @@ function drawStill() {
   renderer.render(world, STEP);
 }
 
-function frame(now) {
-  if (!visible || reduceMotion.matches) return;
+function frame(now, id) {
+  if (id !== loop || !running() || reduceMotion.matches) return;
   const dt = Math.min(0.1, (now - last) / 1000);
   last = now;
   accumulator += dt;
@@ -51,21 +57,29 @@ function frame(now) {
   }
   if (steps === MAX_STEPS) accumulator = 0;
   renderer.render(world, dt);
-  raf = requestAnimationFrame(frame);
+  raf = requestAnimationFrame((next) => frame(next, id));
 }
 
 function schedule() {
   cancelAnimationFrame(raf);
-  if (!visible) return;
+  const id = ++loop;
+  if (!running()) return;
   if (reduceMotion.matches) {
     drawStill();
     return;
   }
+  accumulator = 0;
   last = performance.now();
-  raf = requestAnimationFrame(frame);
+  raf = requestAnimationFrame((now) => frame(now, id));
 }
 
-function onPointerMove(event) {
+let touchDown = false;
+
+function overChrome(event) {
+  return event.target instanceof Element && !!event.target.closest("a");
+}
+
+function movePointer(event, active) {
   const { x, y, inside } = toLocal(event);
   const pointer = world.pointer;
   const elapsed = Math.max(1, event.timeStamp - lastPointerTime) / 1000;
@@ -74,13 +88,33 @@ function onPointerMove(event) {
   lastPointerTime = event.timeStamp;
   pointer.x = x;
   pointer.y = y;
-  pointer.active = inside && event.pointerType !== "touch";
+  pointer.active = active && inside;
+}
+
+function onPointerDown(event) {
+  if (event.pointerType !== "touch" || overChrome(event)) return;
+  const { x, y, inside } = toLocal(event);
+  touchDown = true;
+  world.pointer.x = x;
+  world.pointer.y = y;
+  world.pointer.speed = 0;
+  world.pointer.active = inside;
+  lastPointerTime = event.timeStamp;
+}
+
+function onPointerMove(event) {
+  if (event.pointerType === "touch" && !touchDown) return;
+  movePointer(event, true);
 }
 
 function onPointerUp(event) {
-  if (reduceMotion.matches) return;
-  const { x, y, inside } = toLocal(event);
-  if (inside) world.feed(x, y);
+  const touch = event.pointerType === "touch";
+  if (touch) touchDown = false;
+  if (!overChrome(event) && !reduceMotion.matches && event.target === canvas) {
+    const { x, y, inside } = toLocal(event);
+    if (inside) world.feed(x, y);
+  }
+  if (touch) onPointerLeave();
 }
 
 function onPointerLeave() {
@@ -90,12 +124,24 @@ function onPointerLeave() {
 
 new ResizeObserver(resize).observe(canvas);
 new IntersectionObserver(([entry]) => {
-  visible = entry.isIntersecting;
+  onScreen = entry.isIntersecting;
   schedule();
 }).observe(canvas);
 
+document.addEventListener("visibilitychange", () => {
+  pageVisible = document.visibilityState !== "hidden";
+  schedule();
+});
+
+window.addEventListener("pointerdown", onPointerDown, { passive: true });
 window.addEventListener("pointermove", onPointerMove, { passive: true });
-canvas.addEventListener("pointerup", onPointerUp);
+window.addEventListener("pointerup", onPointerUp);
+window.addEventListener("pointercancel", (event) => {
+  if (event.pointerType === "touch") {
+    touchDown = false;
+    onPointerLeave();
+  }
+});
 document.documentElement.addEventListener("pointerleave", onPointerLeave);
 window.addEventListener("blur", onPointerLeave);
 reduceMotion.addEventListener("change", schedule);

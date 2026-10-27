@@ -20,8 +20,11 @@
     <meta property="og:url" content="https://zhurakov.com/" />
     <meta
       property="og:image"
-      content="https://zhurakov.com/images/whoami.png"
+      content="https://zhurakov.com/images/og.png"
     />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Nikita building a little robot" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Nikita Zhurakov — Hello, World!" />
     <meta
@@ -30,7 +33,7 @@
     />
     <meta
       name="twitter:image"
-      content="https://zhurakov.com/images/whoami.png"
+      content="https://zhurakov.com/images/og.png"
     />
     <link
       rel="icon"
@@ -77,8 +80,9 @@
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "Zhurakov",
-        "alternateName": ["Nikita Zhurakov", "zhurakov.com"],
-        "url": "https://zhurakov.com/"
+        "alternateName": ["Nikita Zhurakov", "zhurakov.com", "Hello World"],
+        "url": "https://zhurakov.com/",
+        "description": "An open-source web playground with small experiments, games, and useful pages."
       }
     </script>
   </head>
@@ -90,7 +94,10 @@
 
     <main>
       <div class="hero-art" id="hero">
-        <img fetchpriority="high" decoding="sync" class="original-art" src="images/robot-guide/workbench.png" alt="Nikita building a little robot" width="400" height="225">
+        <picture>
+          <source srcset="images/robot-guide/workbench.webp" type="image/webp" />
+          <img fetchpriority="high" decoding="sync" class="original-art" src="images/robot-guide/workbench.png" alt="Nikita building a little robot" width="400" height="225">
+        </picture>
         <span class="parked-robot" aria-hidden="true"></span>
         <button type="button" id="wake-robot" class="wake-target" aria-label="Wake the robot" title="Click the robot"></button>
       </div>

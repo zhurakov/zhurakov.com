@@ -276,3 +276,13 @@ footer p {
     overflow-wrap: anywhere;
   }
 }
+
+@media (max-width: 640px) {
+  main {
+    padding-top: 3.25rem;
+  }
+
+  .site-card {
+    top: 3.25rem;
+  }
+}
