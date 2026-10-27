@@ -10,7 +10,7 @@ Zhurakov (zhurakov.com) is an open-source web playground by Nikita Zhurakov. The
 - Games: https://zhurakov.com/posts/games.html — Nikita Zhurakov's games page. Two links sit on a retro arcade screen: DOOM and Messenger.
 - Music: https://zhurakov.com/posts/music.html — Nikita Zhurakov's lofi room. A looping room plays in the background, and a button starts the radio.
 - Antistress: https://zhurakov.com/antistress/ — An interactive WebGL fluid simulation. Touch, drag, and slow down.
-- Privacy: https://zhurakov.com/privacy.html — How this site uses optional analytics.
+- Privacy: https://zhurakov.com/privacy.html — How this site uses optional analytics and the robot chat.
 
 ## Link Library
 

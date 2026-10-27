@@ -177,14 +177,78 @@ addEventListener("resize", () => {
 visualViewport?.addEventListener("resize", () => {
   if (parked) requestAnimationFrame(() => pagePlace(dockPoint()));
 });
+const sitePages = new Set([
+  "/",
+  "/index.html",
+  "/posts/pond.html",
+  "/posts/games.html",
+  "/posts/music.html",
+  "/posts/links.html",
+  "/antistress/",
+  "/antistress/index.html",
+  "/privacy.html",
+]);
+let asking = false;
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   const value = input.value.trim();
-  if (!value) return;
-  answer(value);
+  if (!value || asking) return;
   input.value = "";
+  answer(value);
 });
-function answer(question) {
+async function answer(question) {
+  asking = true;
+  speech.textContent = "…";
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 8000);
+    const response = await fetch("/api/robot", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ question }),
+      signal: controller.signal,
+    });
+    clearTimeout(timer);
+    if (!response.ok) throw new Error("status");
+    const data = await response.json();
+    if (typeof data.answer === "string" && data.answer.trim()) {
+      showModelAnswer(data.answer.trim());
+      return;
+    }
+  } catch {
+    // The short local reply covers a missing worker and a used-up daily allowance.
+  } finally {
+    asking = false;
+  }
+  showLocalAnswer(question);
+}
+function showModelAnswer(text) {
+  speech.replaceChildren();
+  const pattern = /https:\/\/(?:www\.)?zhurakov\.com[^\s)]*/g;
+  let last = 0;
+  for (const match of text.matchAll(pattern)) {
+    const raw = match[0].replace(/[.,;:!?]+$/, "");
+    let url;
+    try {
+      url = new URL(raw);
+    } catch {
+      continue;
+    }
+    const pathname = url.pathname.endsWith("/") && url.pathname !== "/"
+      ? url.pathname
+      : url.pathname.replace(/\/$/, "") || "/";
+    const known = sitePages.has(url.pathname) || sitePages.has(pathname);
+    if (url.protocol !== "https:" || !known) continue;
+    speech.append(text.slice(last, match.index));
+    const link = document.createElement("a");
+    link.href = url.pathname;
+    link.textContent = url.pathname === "/" ? "home" : url.pathname;
+    speech.append(link);
+    last = match.index + raw.length;
+  }
+  speech.append(text.slice(last));
+}
+function showLocalAnswer(question) {
   const lower = question.toLowerCase();
   if (/\b(pond|koi|fish(?:es)?)\b|пруд|кои|рыб/.test(lower)) {
     speech.innerHTML = 'Visit the <a href="posts/pond.html">koi pond \u2197</a> and feed the fish.';

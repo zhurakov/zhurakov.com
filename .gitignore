@@ -8,3 +8,10 @@
 *.pem
 *.p12
 *.pfx
+
+# Cloudflare Worker local state
+.wrangler/
+.cloudflare/
+.local-home/
+worker/node_modules/
+worker/.local-home/
