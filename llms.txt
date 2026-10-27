@@ -7,8 +7,8 @@ Zhurakov (zhurakov.com) is an open-source web playground by Nikita Zhurakov. The
 - Home: https://zhurakov.com/ — An open-source web playground with small experiments, games, and useful pages.
 - Pond: https://zhurakov.com/posts/pond.html — Nikita Zhurakov's pixel koi pond. Move the pointer to attract the fish and click to feed them.
 - Link Library: https://zhurakov.com/posts/links.html — A growing personal library of websites and web projects worth sharing.
-- Games: https://zhurakov.com/posts/games.html — A small games page with a retro arcade mood.
-- Music: https://zhurakov.com/posts/music.html — A quiet lofi-inspired music room.
+- Games: https://zhurakov.com/posts/games.html — Nikita Zhurakov's games page. Two links sit on a retro arcade screen: DOOM and Messenger.
+- Music: https://zhurakov.com/posts/music.html — Nikita Zhurakov's lofi room. A looping room plays in the background, and a button starts the radio.
 - Antistress: https://zhurakov.com/antistress/ — An interactive WebGL fluid simulation. Touch, drag, and slow down.
 - Privacy: https://zhurakov.com/privacy.html — How this site uses optional analytics.
 
