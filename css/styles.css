@@ -52,8 +52,8 @@ main {
 }
 
 .page-content p {
-  font-size: clamp(0.65rem, 2vw, 0.82rem);
-  line-height: 2;
+  font-size: 1rem;
+  line-height: 1.7;
 }
 
 .page-content p + p {
@@ -328,73 +328,6 @@ article sub .rubik {
   .rubik:active {
     transform: perspective(1000px) rotateX(0deg);
   }
-}
-
-footer {
-  padding: 0.35rem 0 0.5rem;
-}
-
-.footer-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-footer a.cc-link {
-  text-decoration: none;
-  color: inherit;
-}
-
-footer img.cc-icon {
-  max-width: 1em;
-  max-height: 1em;
-  margin-left: 0.2em;
-  vertical-align: middle;
-}
-
-footer .brand-label img {
-  height: 48px;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
-}
-
-footer .brand-label picture {
-  display: block;
-  width: 92px;
-  height: 48px;
-}
-
-footer .github-footer-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: 30px;
-  padding: 0.25rem 0.5rem;
-  border: 1px solid rgba(195, 204, 175, 0.45);
-  border-radius: 6px;
-  background: rgba(255, 252, 245, 0.08);
-  text-decoration: none;
-}
-
-footer .github-footer-link:visited {
-  color: #fffcf5;
-}
-
-footer .github-footer-link:hover {
-  border-color: #fffcf5;
-  color: #ffffff;
-  text-decoration: none;
-}
-
-footer .github-footer-link img {
-  display: block;
-  width: 86px;
-  height: auto;
-}
-
-footer p {
-  margin: 0;
 }
 
 @media (max-width: 640px) {

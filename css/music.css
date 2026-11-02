@@ -149,49 +149,17 @@ footer {
   background: rgba(0, 0, 0, 0.5);
 }
 
-.footer-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-}
-
 footer .brand-label img {
   height: 32px;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
 }
 
 footer .github-footer-link {
-  display: inline-flex;
-  align-items: center;
   min-height: 28px;
   padding: 0.2rem 0.45rem;
-  border: 1px solid rgba(195, 204, 175, 0.45);
-  border-radius: 6px;
-  background: rgba(255, 252, 245, 0.08);
 }
 
 footer .github-footer-link img {
-  display: block;
   width: 78px;
-  height: auto;
-}
-
-footer a.cc-link {
-  color: inherit;
-  text-decoration: none;
-}
-
-footer img.cc-icon {
-  max-width: 1em;
-  max-height: 1em;
-  margin-left: 0.2em;
-  vertical-align: middle;
-}
-
-footer p {
-  margin: 0;
 }
 
 @keyframes room-meter {

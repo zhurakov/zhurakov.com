@@ -1,5 +1,6 @@
 import { robotRenderer } from "./robot-motion.js";
 import { animateBoy } from "./hero-eyes.js";
+import { askTopics, pageLabels, pages } from "./site-pages.js";
 const hero = document.querySelector("#hero");
 const wake = document.querySelector("#wake-robot");
 const robot = document.querySelector("#driving-robot");
@@ -177,17 +178,8 @@ addEventListener("resize", () => {
 visualViewport?.addEventListener("resize", () => {
   if (parked) requestAnimationFrame(() => pagePlace(dockPoint()));
 });
-const sitePages = new Set([
-  "/",
-  "/index.html",
-  "/posts/pond.html",
-  "/posts/games.html",
-  "/posts/music.html",
-  "/posts/links.html",
-  "/antistress/",
-  "/antistress/index.html",
-  "/privacy.html",
-]);
+const pondPage = pages.find((page) => page.label === "Pond");
+const gamesPage = pages.find((page) => page.label === "Games");
 let asking = false;
 form.addEventListener("submit", (event) => {
   event.preventDefault();
@@ -196,7 +188,14 @@ form.addEventListener("submit", (event) => {
   input.value = "";
   answer(value);
 });
+function isIdentityQuestion(question) {
+  return /\b(nikita|yourself|who|name|called)\b|никит|кто|теб|зовут|имя/i.test(question);
+}
 async function answer(question) {
+  if (isIdentityQuestion(question)) {
+    showLocalAnswer(question);
+    return;
+  }
   asking = true;
   speech.textContent = "…";
   try {
@@ -237,28 +236,34 @@ function showModelAnswer(text) {
     const pathname = url.pathname.endsWith("/") && url.pathname !== "/"
       ? url.pathname
       : url.pathname.replace(/\/$/, "") || "/";
-    const known = sitePages.has(url.pathname) || sitePages.has(pathname);
-    if (url.protocol !== "https:" || !known) continue;
+    const label = pageLabels.get(url.pathname) || pageLabels.get(pathname);
+    if (url.protocol !== "https:" || !label) continue;
     speech.append(text.slice(last, match.index));
     const link = document.createElement("a");
     link.href = url.pathname;
-    link.textContent = url.pathname === "/" ? "home" : url.pathname;
+    link.textContent = label;
     speech.append(link);
     last = match.index + raw.length;
   }
   speech.append(text.slice(last));
 }
+function showPageLink(before, page, label, after) {
+  const link = document.createElement("a");
+  link.href = page.path;
+  link.textContent = label;
+  speech.replaceChildren(before, link, after);
+}
 function showLocalAnswer(question) {
   const lower = question.toLowerCase();
   if (/\b(pond|koi|fish(?:es)?)\b|пруд|кои|рыб/.test(lower)) {
-    speech.innerHTML = 'Visit the <a href="posts/pond.html">koi pond \u2197</a> and feed the fish.';
-  } else if (/\b(projects?|work|builds?)\b|проект|дела|созда/.test(lower)) {
+    showPageLink("Visit the ", pondPage, "koi pond \u2197", " and feed the fish.");
+  } else if (/\b(projects?|work|builds?)\b|проект/.test(lower)) {
     speech.textContent = "There\u2019s no separate projects page. This site is the collection of experiments.";
   } else if (/\b(games?|play)\b|игр/.test(lower)) {
-    speech.innerHTML = 'Ready to play? Head over to <a href="posts/games.html">Games \u2197</a>.';
-  } else if (/\b(nikita|yourself|who)\b|никит|кто|теб/.test(lower)) {
+    showPageLink("Ready to play? Head over to ", gamesPage, "Games \u2197", ".");
+  } else if (isIdentityQuestion(lower)) {
     speech.textContent = "This is a personal site \u2014 a collection of experiments, games, and small pages.";
   } else {
-    speech.textContent = "Ask me about the pond or games. I can help you find your way around the site.";
+    speech.textContent = `Ask me about the ${askTopics}.`;
   }
 }

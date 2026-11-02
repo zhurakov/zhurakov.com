@@ -107,8 +107,6 @@ body.started .robot-stage {
   padding: 16px 20px;
   max-width: 95%;
   min-height: 76px;
-  max-height: 110px;
-  overflow: auto;
   font-size: clamp(10px, 1.2vw, 14px);
   line-height: 1.8;
   box-shadow: 0 0 12px rgba(48, 226, 232, .2);

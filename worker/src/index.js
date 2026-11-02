@@ -1,18 +1,7 @@
+import { guide as GUIDE } from "../../js/site-pages.js";
+
 const MODEL = "@cf/meta/llama-3.2-1b-instruct";
 const ORIGINS = new Set(["https://zhurakov.com", "https://www.zhurakov.com"]);
-const GUIDE = `You are the guide for zhurakov.com, a small personal web playground.
-Answer in one or two short sentences. Talk only about this site.
-When you point to a page, include its full URL and no other URL.
-Pages:
-- Home: https://zhurakov.com/
-- Pond: https://zhurakov.com/posts/pond.html — a pixel koi pond. Move the pointer to attract the fish and click to feed them.
-- Games: https://zhurakov.com/posts/games.html — DOOM and Messenger on a retro arcade screen.
-- Music: https://zhurakov.com/posts/music.html — a lofi room. A looping room plays behind a button that starts the radio.
-- Antistress: https://zhurakov.com/antistress/ — a fluid simulation. Touch or drag to stir it.
-- Links: https://zhurakov.com/posts/links.html — a personal library of websites.
-- Privacy: https://zhurakov.com/privacy.html
-There is no separate projects page. The site is the collection of experiments.
-Do not invent pages, names, or personal details. Do not use markdown.`;
 
 export default {
   async fetch(request, env) {

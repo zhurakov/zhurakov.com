@@ -31,63 +31,6 @@ header h1 {
   margin-bottom: 10px;
 }
 
-footer a.cc-link {
-  text-decoration: none;
-  color: inherit;
-}
-
-footer img.cc-icon {
-  max-width: 1em;
-  max-height: 1em;
-  margin-left: 0.2em;
-  vertical-align: middle;
-}
-
-footer {
-  padding: 1px 0;
-}
-.footer-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-}
-footer .brand-label img {
-  height: 48px;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
-}
-
-footer .github-footer-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: 30px;
-  padding: 0.25rem 0.5rem;
-  border: 1px solid rgba(195, 204, 175, 0.45);
-  border-radius: 6px;
-  background: rgba(255, 252, 245, 0.08);
-  text-decoration: none;
-}
-
-footer .github-footer-link:visited {
-  color: #fffcf5;
-}
-
-footer .github-footer-link:hover {
-  border-color: #fffcf5;
-  color: #ffffff;
-  text-decoration: none;
-}
-
-footer .github-footer-link img {
-  display: block;
-  width: 86px;
-  height: auto;
-}
-footer p {
-  margin: 0;
-}
-
 html,
 body {
   height: 100%;
@@ -128,17 +71,6 @@ body {
     rgba(0, 0, 0, 0) 5px,
     rgba(0, 0, 0, 0) 10px
   );
-}
-
-.background-effect::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.1;
-  mix-blend-mode: screen;
-  background: linear-gradient(45deg, #ff7a18 0%, #7900c5 100%);
 }
 
 .scan-bar {

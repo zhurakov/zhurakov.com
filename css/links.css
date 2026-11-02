@@ -50,8 +50,8 @@ h1 {
   max-width: 34rem;
   margin: 0;
   color: #c3ccaf;
-  font-size: clamp(0.62rem, 2vw, 0.78rem);
-  line-height: 1.85;
+  font-size: 1rem;
+  line-height: 1.7;
 }
 
 .collection-title {
@@ -86,15 +86,6 @@ h1 {
   background: #fffcf5;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
   color: #4a3f35;
-  transition:
-    box-shadow 180ms ease,
-    transform 180ms ease;
-}
-
-.site-card:hover,
-.site-card:focus-within {
-  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.24);
-  transform: translateY(-4px);
 }
 
 .site-card:nth-of-type(6n + 1) {
@@ -152,7 +143,6 @@ h1 {
   height: 36px;
   flex: 0 0 auto;
   border: 1px solid #e6d7bf;
-  border-radius: 9px;
   background: #fffaf0;
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.75),
@@ -169,82 +159,18 @@ h1 {
   line-height: 1.65;
   transition:
     border-color 160ms ease,
-    color 160ms ease,
-    transform 160ms ease;
+    color 160ms ease;
 }
 
 .site-link:hover {
   border-color: #8b6f50;
   color: #322920;
-  transform: translateX(3px);
 }
 
 .site-link:focus-visible {
   border-radius: 2px;
   outline: 3px solid #e37fd3;
   outline-offset: 5px;
-}
-
-footer {
-  padding: 0.35rem 0 0.5rem;
-}
-
-.footer-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-footer a {
-  text-decoration: none;
-}
-
-footer .brand-label img {
-  height: 48px;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
-}
-
-footer .github-footer-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: 30px;
-  padding: 0.25rem 0.5rem;
-  border: 1px solid rgba(195, 204, 175, 0.45);
-  border-radius: 6px;
-  background: rgba(255, 252, 245, 0.08);
-}
-
-footer .github-footer-link:visited {
-  color: #fffcf5;
-}
-
-footer .github-footer-link:hover {
-  border-color: #fffcf5;
-  color: #ffffff;
-}
-
-footer .github-footer-link img {
-  display: block;
-  width: 86px;
-  height: auto;
-}
-
-footer .cc-link {
-  color: inherit;
-}
-
-footer .cc-icon {
-  max-width: 1em;
-  max-height: 1em;
-  margin-left: 0.2em;
-  vertical-align: middle;
-}
-
-footer p {
-  margin: 0;
 }
 
 @media (max-width: 520px) {
