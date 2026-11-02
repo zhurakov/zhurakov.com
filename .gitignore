@@ -15,3 +15,11 @@
 .local-home/
 worker/node_modules/
 worker/.local-home/
+
+# Local editor and agent files
+.cursor/
+.agents/
+.codex/
+AGENTS.md
+CLAUDE.md
+.public-release-notes.md
