@@ -22,7 +22,7 @@ const copyButton = document.querySelector('#copy-score');
 const hearts = [...document.querySelectorAll('.lives span')];
 let playerPose = 'forward';
 
-let score = 0, lives = 3, playerX = 50, speed = 0, active = false, lastTime = 0, spawnDelay = 0, streak = 0, roundId = 0, lastRank = 'INTERN', displayedLoad = 1;
+let score = 0, lives = 3, playerX = 50, targetPlayerX = 50, speed = 0, active = false, lastTime = 0, spawnDelay = 0, streak = 0, roundId = 0, lastRank = 'INTERN', displayedLoad = 1;
 let rams = [];
 let highScore = Number(localStorage.getItem('ram-rush-high-score') || 0);
 const keys = new Set();
@@ -62,7 +62,7 @@ function catchBurst(x, y) {
   window.setTimeout(() => burst.remove(), 520);
 }
 function reset() {
-  rams.forEach(ram => ram.el.remove()); rams = []; score = 0; lives = 3; playerX = 50; speed = 0; streak = 0; spawnDelay = 1.05; displayedLoad = 1;
+  rams.forEach(ram => ram.el.remove()); rams = []; score = 0; lives = 3; playerX = 50; targetPlayerX = 50; speed = 0; streak = 0; spawnDelay = 1.05; displayedLoad = 1;
   player.classList.remove('catching'); playerFront.classList.remove('catching');
   setPlayerPose('forward');
   displayScore(); updateHearts(); setPlayerX(50); statusEl.textContent = 'CATCH RAM. DON’T DROP IT.'; over.hidden = true;
@@ -120,7 +120,15 @@ function tick(now, currentRound) {
   if (!active || currentRound !== roundId) return;
   const delta = Math.min((now - lastTime) / 16.67, 2); lastTime = now;
   const move = (keys.has('ArrowRight') || keys.has('KeyD') ? 1 : 0) - (keys.has('ArrowLeft') || keys.has('KeyA') ? 1 : 0);
-  const dash = keys.has('Space') ? 1.75 : 1; speed += (move * 1.25 * dash - speed) * .2; setPlayerX(playerX + speed * delta); player.classList.toggle('dashing', dash > 1 && move !== 0);
+  const dash = keys.has('Space') ? 1.75 : 1;
+  if (dragPointerId !== null) {
+    speed = 0;
+    setPlayerX(playerX + (targetPlayerX - playerX) * Math.min(1, .48 * delta));
+  } else {
+    speed += (move * 1.25 * dash - speed) * .2;
+    setPlayerX(playerX + speed * delta);
+  }
+  player.classList.toggle('dashing', dash > 1 && move !== 0);
   const level = loadLevel();
   if (level !== displayedLoad) { displayedLoad = level; statusEl.textContent = `RAM LOAD ×${level}`; replayAnimation([scoreBlock], 'score-pop', 390); }
   spawnDelay -= delta / 60;
@@ -146,10 +154,29 @@ function tick(now, currentRound) {
 }
 document.addEventListener('keydown', event => { if (['ArrowLeft', 'ArrowRight', 'Space'].includes(event.code)) event.preventDefault(); keys.add(event.code); });
 document.addEventListener('keyup', event => keys.delete(event.code));
-let touchStart = null;
-game.addEventListener('pointerdown', event => { if (!event.target.closest('button')) { touchStart = event.clientX; game.setPointerCapture(event.pointerId); } });
-game.addEventListener('pointermove', event => { if (touchStart !== null && active) { const width = game.getBoundingClientRect().width; setPlayerX(playerX + ((event.clientX - touchStart) / width) * 100); touchStart = event.clientX; } });
-game.addEventListener('pointerup', () => touchStart = null);
+let dragPointerId = null;
+function setTouchTarget(event) {
+  const rect = game.getBoundingClientRect();
+  targetPlayerX = ((event.clientX - rect.left) / rect.width) * 100;
+}
+function releaseTouch(event) {
+  if (event.pointerId === dragPointerId) dragPointerId = null;
+}
+game.addEventListener('pointerdown', event => {
+  if (!active || event.target.closest('button') || !event.isPrimary) return;
+  dragPointerId = event.pointerId;
+  setTouchTarget(event);
+  game.setPointerCapture(event.pointerId);
+  event.preventDefault();
+});
+game.addEventListener('pointermove', event => {
+  if (event.pointerId !== dragPointerId || !active) return;
+  setTouchTarget(event);
+  event.preventDefault();
+});
+game.addEventListener('pointerup', releaseTouch);
+game.addEventListener('pointercancel', releaseTouch);
+game.addEventListener('lostpointercapture', releaseTouch);
 startButton.addEventListener('click', start); restartButton.addEventListener('click', start);
 copyButton.addEventListener('click', async () => {
   try { await navigator.clipboard.writeText(shareText()); copyButton.textContent = 'COPIED!'; }
