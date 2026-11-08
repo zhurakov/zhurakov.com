@@ -4,6 +4,7 @@ const playerFront = document.querySelector('#player-front');
 const fallZone = document.querySelector('#fall-zone');
 const floatZone = document.querySelector('#float-zone');
 const scoreEl = document.querySelector('#score');
+const mobileScoreEl = document.querySelector('#mobile-score');
 const scoreBlock = document.querySelector('.score-block');
 const leaderboardEl = document.querySelector('#leaderboard');
 const statusEl = document.querySelector('#status');
@@ -31,7 +32,11 @@ let rams = [];
 const keys = new Set();
 nameInput.value = localStorage.getItem('ram-rush-player-name') || '';
 
-function displayScore() { scoreEl.textContent = score.toString().padStart(6, '0'); }
+function displayScore() {
+  const scoreText = score.toString().padStart(6, '0');
+  scoreEl.textContent = scoreText;
+  mobileScoreEl.textContent = `${scoreText} MB`;
+}
 function setPlayerX(next) { playerX = Math.max(13, Math.min(87, next)); player.style.left = `${playerX}%`; playerFront.style.left = `${playerX}%`; }
 function setPlayerPose(nextPose) {
   if (nextPose === playerPose) return;
