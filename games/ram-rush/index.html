@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#09081b" />
+    <meta name="description" content="Catch falling RAM, beat your score, and challenge your friends." />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="RAM RUSH — Can you save the servers?" />
+    <meta property="og:description" content="Catch falling RAM and beat your friends' score." />
+    <meta property="og:image" content="./assets/ram-rush-concept.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title>RAM RUSH — Catch the RAM</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="game-shell">
+      <section class="game" aria-label="RAM RUSH game">
+        <div class="atmosphere" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <header class="hud">
+          <div class="logo"><svg class="logo-chip" viewBox="0 0 44 24" aria-hidden="true"><path d="M4 4h34l3 3v10l-3 3H4L1 17V7z" fill="#bfff19" stroke="#080719" stroke-width="2" stroke-linejoin="round"/><rect x="7" y="7" width="6" height="7" rx="1" fill="#111133"/><rect x="16" y="7" width="6" height="7" rx="1" fill="#111133"/><rect x="25" y="7" width="6" height="7" rx="1" fill="#111133"/><path d="M8 20v3m4-3v3m4-3v3m4-3v3m4-3v3m4-3v3m4-3v3" stroke="#ffcf73" stroke-width="2"/></svg><span>RAM</span> <strong>RUSH</strong></div>
+          <div class="score-block"><span>SCORE</span><strong id="score">000000</strong></div>
+          <div class="lives" aria-label="Lives"><span id="heart-1">♥</span><span id="heart-2">♥</span><span id="heart-3">♥</span></div>
+        </header>
+
+        <div id="fall-zone" class="fall-zone" aria-hidden="true"></div>
+        <div id="float-zone" class="float-zone" aria-live="polite"></div>
+        <aside class="high-score" aria-label="High scores">
+          <h2>HIGH<br />SCORE</h2>
+          <ol>
+            <li><span>1.</span><b id="high-score">000000</b></li>
+            <li><span>2.</span><b>04800</b></li>
+            <li><span>3.</span><b>03150</b></li>
+          </ol>
+        </aside>
+
+        <div id="player" class="player" aria-label="Sam catches RAM">
+          <img class="player-art" src="./assets/sam-catcher.png" alt="Stylized Sam with a catch box" />
+        </div>
+        <div id="player-front" class="player-front" aria-hidden="true">
+          <img class="player-art" src="./assets/sam-catcher.png" alt="" />
+        </div>
+
+        <section id="intro" class="start-card">
+          <p>THE SERVERS ARE OVERHEATING!</p>
+          <h1>CATCH RAM</h1>
+          <span>Don't let memory crash</span>
+          <button id="start" type="button"><span>▶</span> PLAY NOW</button>
+        </section>
+
+        <section id="game-over" class="game-over" hidden>
+          <p id="result-eyebrow">RUN COMPLETE</p>
+          <h2 id="result-title">SYSTEM CRASHED</h2>
+          <div class="share-card" aria-label="Shareable score card">
+            <span id="rank-label">RANK // INTERN</span>
+            <strong id="final-score">000000</strong>
+            <p id="share-caption">CAN YOU BEAT MY SCORE?</p>
+            <img src="./assets/golden-ram.png" alt="Golden RAM bonus" />
+          </div>
+          <div class="game-over-actions">
+            <button id="share" class="share-button" type="button">SHARE ON X</button>
+            <button id="copy-score" class="copy-button" type="button">COPY CHALLENGE</button>
+            <button id="restart" class="restart-button" type="button">PLAY AGAIN</button>
+          </div>
+        </section>
+
+        <footer class="controls">
+          <span class="status" id="status">READY TO BOOT</span>
+          <span class="touch-hint">DRAG TO MOVE</span>
+          <div><kbd>←</kbd><kbd>→</kbd><i>/</i><kbd>A</kbd><kbd>D</kbd> <b>move</b></div>
+          <div><kbd>SPACE</kbd> <b>dash</b></div>
+        </footer>
+      </section>
+    </main>
+    <script src="./game.js"></script>
+  </body>
+</html>
