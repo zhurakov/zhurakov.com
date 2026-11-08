@@ -156,8 +156,8 @@ function catchRam(ram) {
 function shareText() {
   const scoreText = score.toLocaleString('en-US');
   const local = ['localhost', '127.0.0.1'].includes(location.hostname);
-  const challengeUrl = new URL('/games/ram-rush/?challenge=box-2', location.origin).href;
-  return `I gave Sam Altman a box and access to your RAM.\nThis was a mistake.\n\nRAM STOLEN: ${scoreText} MB\n\nCan you keep more out of the box?${local ? '' : `\n${challengeUrl}`}`;
+  const challengeUrl = new URL('/games/ram-rush/?challenge=box-3', location.origin).href;
+  return `I gave Sam Altman a box and access to your RAM.\nThis was a mistake.\n\nRAM STOLEN: ${scoreText} MB\n\nHow much more can you help him take?${local ? '' : `\n${challengeUrl}`}`;
 }
 function resultCardScore() { return score.toLocaleString('en-US').padStart(6, '0'); }
 function canvasBlob(canvas) { return new Promise(resolve => canvas.toBlob(resolve, 'image/png')); }
@@ -186,7 +186,7 @@ async function createResultCard() {
   ctx.font = '900 italic 71px "Archivo Black", Impact, sans-serif'; ctx.fillStyle = cream; ctx.fillText('SAM HAS A BOX.', 62, 207);
   ctx.font = '900 italic 31px "Archivo Black", Impact, sans-serif'; ctx.fillStyle = cream; ctx.fillText('RAM STOLEN', 64, 366);
   const scoreText = `${resultCardScore()} MB`; ctx.font = `900 italic ${scoreText.length > 11 ? 82 : 101}px "Archivo Black", Impact, sans-serif`; ctx.fillStyle = lime; ctx.fillText(scoreText, 59, 477);
-  ctx.font = '900 italic 27px "Archivo Black", Impact, sans-serif'; ctx.fillStyle = cream; ctx.fillText('CAN YOU KEEP MORE OUT OF THE BOX?', 63, 564);
+  ctx.font = '900 italic 27px "Archivo Black", Impact, sans-serif'; ctx.fillStyle = cream; ctx.fillText('HELP HIM TAKE MORE.', 63, 564);
   ctx.fillStyle = cyan; ctx.fillRect(64, 592, 560, 6);
   ctx.drawImage(art, 655, 35, 545, 545);
   return canvasBlob(canvas);
