@@ -41,8 +41,9 @@ function setPlayerPose(nextPose) {
   });
 }
 function trackNearestRam() {
-  if (!rams.length) { setPlayerPose('forward'); return; }
-  const nearest = rams.reduce((leading, ram) => ram.y > leading.y ? ram : leading);
+  const collectibles = rams.filter(ram => !ram.hazard);
+  if (!collectibles.length) { setPlayerPose('forward'); return; }
+  const nearest = collectibles.reduce((leading, ram) => ram.y > leading.y ? ram : leading);
   const offset = (nearest.x + 6) - playerX;
   setPlayerPose(offset < -7 ? 'left' : offset > 7 ? 'right' : 'forward');
 }
@@ -88,7 +89,7 @@ function reset() {
   rams.forEach(ram => ram.el.remove()); rams = []; score = 0; lives = 3; playerX = 50; targetPlayerX = 50; speed = 0; streak = 0; spawnDelay = 1.05; displayedLoad = 1;
   player.classList.remove('catching'); playerFront.classList.remove('catching');
   setPlayerPose('forward');
-  displayScore(); updateHearts(); setPlayerX(50); statusEl.textContent = 'CATCH RAM. DON’T DROP IT.'; over.hidden = true;
+  displayScore(); updateHearts(); setPlayerX(50); statusEl.textContent = 'ACQUIRE RAM. AVOID TRAPS.'; over.hidden = true;
 }
 function start() {
   playerName = normalizeName(nameInput.value);
@@ -100,29 +101,49 @@ function start() {
 }
 function createRam() {
   const level = loadLevel();
-  const golden = Math.random() < .1;
-  const el = document.createElement('div'); el.className = `ram${golden ? ' golden' : ''}`;
-  el.innerHTML = `<img src="./assets/${golden ? 'golden-ram.png' : 'ram-module.png'}" alt="" />`;
+  const hazardChance = .12 + (level - 1) * .045;
+  const roll = Math.random();
+  const type = roll < hazardChance
+    ? ['trap', 'tabs', 'local'][Math.floor(Math.random() * 3)]
+    : roll < hazardChance + .1 ? 'golden' : 'ram';
+  const assets = { ram: 'ram-module.png', golden: 'golden-ram.png', trap: 'ram-trap.png', tabs: 'tabs-47.png', local: 'local-llm.png' };
+  const golden = type === 'golden';
+  const hazard = ['trap', 'tabs', 'local'].includes(type);
+  const el = document.createElement('div'); el.className = `ram ram--${type}${golden ? ' golden' : ''}${hazard ? ' hazard' : ''}`;
+  el.innerHTML = `<img src="./assets/${assets[type]}" alt="" />`;
   const x = 8 + Math.random() * 84;
   el.style.left = `${x}%`; el.style.top = '-105px';
   el.style.transform = `rotate(${(Math.random() - .5) * 18}deg)`;
   fallZone.append(el);
-  rams.push({ el, x, y: -105, golden, velocity: 3 + level * .55 + Math.random() * 1.3, rotation: (Math.random() - .5) * 16 });
+  rams.push({ el, x, y: -105, golden, hazard, type, velocity: 3 + level * .55 + Math.random() * 1.3, rotation: (Math.random() - .5) * 16 });
 }
-function flash(points, x, y) { const pop = document.createElement('span'); pop.className = 'float-score'; pop.textContent = `+${points}`; pop.style.left = `${x}%`; pop.style.top = `${y}px`; floatZone.append(pop); setTimeout(() => pop.remove(), 680); }
+function flash(points, x, y, danger = false) { const pop = document.createElement('span'); pop.className = `float-score${danger ? ' danger' : ''}`; pop.textContent = danger ? points : `+${points}`; pop.style.left = `${x}%`; pop.style.top = `${y}px`; floatZone.append(pop); setTimeout(() => pop.remove(), 680); }
 function loseRam(ram) {
   ram.el.remove(); lives--; streak = 0; updateHearts(); replayAnimation([livesEl], 'damage', 420);
   statusEl.textContent = lives ? 'WARNING: RAM DROPPED!' : 'SYSTEM CRASHED';
   if (!lives) end();
 }
 function catchRam(ram) {
+  if (ram.hazard) {
+    const warnings = {
+      trap: 'RAM TRAP! COMBO LOST.',
+      tabs: '47 TABS SAVED!',
+      local: 'LOCAL LLM IS PROTECTED!'
+    };
+    ram.el.remove(); lives--; streak = 0; updateHearts();
+    replayAnimation([livesEl, player, playerFront], 'damage', 420);
+    statusEl.textContent = lives ? warnings[ram.type] : 'SYSTEM CRASHED';
+    catchBurst(ram.x, ram.y); flash('DON’T TAKE IT!', ram.x, ram.y, true);
+    if (!lives) end();
+    return;
+  }
   const level = loadLevel();
   const basePoints = ram.golden ? 500 : 100 + Math.min(streak, 8) * 25;
   const points = Math.round(basePoints * (1 + (level - 1) * .12));
   score += points; streak++; displayScore();
   setPlayerPose('forward');
   replayAnimation([player, playerFront], 'catching', 390); replayAnimation([scoreBlock], 'score-pop', 390);
-  statusEl.textContent = ram.golden ? 'GOLDEN RAM ×5!' : streak > 2 ? `COMBO ×${streak}` : 'MEMORY SAVED';
+  statusEl.textContent = ram.golden ? 'GOLDEN RAM ACQUIRED!' : streak > 2 ? `RAM HAUL ×${streak}` : 'RAM ACQUIRED';
   catchBurst(ram.x, ram.y); flash(ram.golden ? '500 ★' : points, ram.x, ram.y); ram.el.remove();
 }
 function shareText() {
@@ -171,7 +192,11 @@ function tick(now, currentRound) {
     const ramBox = ram.el.getBoundingClientRect();
     const atBox = ramBox.bottom >= playerBox.top + playerBox.height * .70 && ramBox.top <= playerBox.top + playerBox.height * .80 && ramBox.right > playerBox.left + playerBox.width * .22 && ramBox.left < playerBox.right - playerBox.width * .22;
     if (atBox) { catchRam(ram); rams.splice(i, 1); continue; }
-    if (ram.y > fallZone.clientHeight + 60) { loseRam(ram); rams.splice(i, 1); }
+    if (ram.y > fallZone.clientHeight + 60) {
+      if (!ram.hazard) loseRam(ram);
+      else ram.el.remove();
+      rams.splice(i, 1);
+    }
   }
   trackNearestRam();
   requestAnimationFrame(next => tick(next, currentRound));
