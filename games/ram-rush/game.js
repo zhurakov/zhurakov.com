@@ -18,6 +18,7 @@ const rankLabel = document.querySelector('#rank-label');
 const startButton = document.querySelector('#start');
 const restartButton = document.querySelector('#restart');
 const shareButton = document.querySelector('#share');
+const saveCardButton = document.querySelector('#save-card');
 const copyButton = document.querySelector('#copy-score');
 const hearts = [...document.querySelectorAll('.lives span')];
 const nameInput = document.querySelector('#player-name');
@@ -158,6 +159,57 @@ function shareText() {
   const challengeUrl = new URL('/games/ram-rush/?challenge=ram', location.origin).href;
   return `I gave Sam Altman a box and access to your RAM.\nThis was a mistake.\n\nRAM STOLEN: ${scoreText} MB\n\nCan you keep more out of the box?${local ? '' : `\n${challengeUrl}`}`;
 }
+function resultCardScore() { return score.toLocaleString('en-US').padStart(6, '0'); }
+function canvasBlob(canvas) { return new Promise(resolve => canvas.toBlob(resolve, 'image/png')); }
+function loadResultArt() {
+  const image = new Image(); image.src = './assets/ram-haul-box.png';
+  return image.complete && image.naturalWidth ? Promise.resolve(image) : new Promise((resolve, reject) => {
+    image.onload = () => resolve(image); image.onerror = reject;
+  });
+}
+async function createResultCard() {
+  const [art] = await Promise.all([loadResultArt(), document.fonts?.ready || Promise.resolve()]);
+  const canvas = document.createElement('canvas'); canvas.width = 1200; canvas.height = 630;
+  const ctx = canvas.getContext('2d');
+  const navy = '#060b1c', cream = '#fff6db', lime = '#bfff19', cyan = '#31f5e0';
+  const background = ctx.createLinearGradient(0, 0, 1200, 630); background.addColorStop(0, '#071225'); background.addColorStop(1, '#02050e');
+  ctx.fillStyle = background; ctx.fillRect(0, 0, 1200, 630);
+  ctx.strokeStyle = '#196a7b'; ctx.globalAlpha = .38; ctx.lineWidth = 2;
+  for (let x = 715; x < 1220; x += 58) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x - 160, 630); ctx.stroke(); }
+  for (let y = 70; y < 640; y += 62) { ctx.beginPath(); ctx.moveTo(690, y); ctx.lineTo(1200, y); ctx.stroke(); }
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = '#ee334f'; for (let x = 0; x < 1200; x += 34) { ctx.beginPath(); ctx.moveTo(x, 272); ctx.lineTo(x + 18, 272); ctx.lineTo(x + 36, 292); ctx.lineTo(x + 18, 292); ctx.closePath(); ctx.fill(); }
+  ctx.fillStyle = navy; ctx.fillRect(0, 267, 1200, 30);
+  ctx.save(); ctx.translate(63, 70); ctx.transform(1, 0, -.16, 1, 0, 0);
+  ctx.font = '900 italic 50px "Archivo Black", Impact, sans-serif'; ctx.fillStyle = cream; ctx.fillText('RAM', 0, 0);
+  const ramWidth = ctx.measureText('RAM ').width; ctx.fillStyle = lime; ctx.fillText('RUSH', ramWidth, 0); ctx.restore();
+  ctx.font = '900 italic 71px "Archivo Black", Impact, sans-serif'; ctx.fillStyle = cream; ctx.fillText('SAM HAS A BOX.', 62, 207);
+  ctx.font = '900 italic 31px "Archivo Black", Impact, sans-serif'; ctx.fillStyle = cream; ctx.fillText('RAM STOLEN', 64, 366);
+  const scoreText = `${resultCardScore()} MB`; ctx.font = `900 italic ${scoreText.length > 11 ? 82 : 101}px "Archivo Black", Impact, sans-serif`; ctx.fillStyle = lime; ctx.fillText(scoreText, 59, 477);
+  ctx.font = '900 italic 27px "Archivo Black", Impact, sans-serif'; ctx.fillStyle = cream; ctx.fillText('CAN YOU KEEP MORE OUT OF THE BOX?', 63, 564);
+  ctx.fillStyle = cyan; ctx.fillRect(64, 592, 560, 6);
+  ctx.drawImage(art, 655, 35, 545, 545);
+  return canvasBlob(canvas);
+}
+function downloadResultCard(blob) {
+  const link = document.createElement('a'); const url = URL.createObjectURL(blob);
+  link.href = url; link.download = `ram-rush-${score}.png`; link.click(); window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+async function saveResultCard() { const blob = await createResultCard(); downloadResultCard(blob); return blob; }
+async function shareResult() {
+  const initial = shareButton.textContent; shareButton.textContent = 'PREPARING CARD…'; shareButton.disabled = true;
+  try {
+    const blob = await createResultCard(); const file = new File([blob], `ram-rush-${score}.png`, { type: 'image/png' });
+    if (navigator.canShare?.({ files: [file] })) await navigator.share({ files: [file], title: 'RAM RUSH', text: shareText() });
+    else {
+      downloadResultCard(blob);
+      const intent = new URL('https://x.com/intent/tweet'); intent.searchParams.set('text', shareText());
+      window.open(intent, '_blank', 'noopener,noreferrer');
+    }
+    track('share_click');
+  } catch (error) { if (error?.name !== 'AbortError') shareButton.textContent = 'TRY AGAIN'; }
+  finally { shareButton.disabled = false; if (shareButton.textContent !== 'TRY AGAIN') shareButton.textContent = initial; }
+}
 function end() {
   if (!active) return;
   active = false; rams.forEach(ram => ram.el.remove()); rams = [];
@@ -240,11 +292,13 @@ nameInput.addEventListener('keydown', event => { if (event.key === 'Enter') star
 copyButton.addEventListener('click', async () => {
   try { await navigator.clipboard.writeText(shareText()); copyButton.textContent = 'COPIED!'; }
   catch { copyButton.textContent = 'COPY FAILED'; }
-  window.setTimeout(() => { copyButton.textContent = 'COPY CHALLENGE'; }, 1500);
+  window.setTimeout(() => { copyButton.textContent = 'COPY POST'; }, 1500);
 });
-shareButton.addEventListener('click', () => {
-  const intent = new URL('https://x.com/intent/tweet'); intent.searchParams.set('text', shareText());
-  track('share_click');
-  window.open(intent, '_blank', 'noopener,noreferrer');
+saveCardButton.addEventListener('click', async () => {
+  const initial = saveCardButton.textContent; saveCardButton.textContent = 'SAVING…'; saveCardButton.disabled = true;
+  try { await saveResultCard(); saveCardButton.textContent = 'SAVED!'; }
+  catch { saveCardButton.textContent = 'TRY AGAIN'; }
+  window.setTimeout(() => { saveCardButton.textContent = initial; saveCardButton.disabled = false; }, 1400);
 });
+shareButton.addEventListener('click', shareResult);
 loadLeaderboard();
