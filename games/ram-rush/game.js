@@ -48,7 +48,7 @@ function trackNearestRam() {
   setPlayerPose(offset < -7 ? 'left' : offset > 7 ? 'right' : 'forward');
 }
 function updateHearts() { hearts.forEach((heart, index) => heart.classList.toggle('lost', index >= lives)); }
-function loadLevel() { return Math.min(5, 1 + Math.floor(score / 1800)); }
+function loadLevel() { return Math.min(5, 1 + Math.floor(score / 1200)); }
 function rankFor() {
   if (score >= 12000) return 'RAM LEGEND';
   if (score >= 6500) return 'SERVER HERO';
@@ -111,11 +111,17 @@ function createRam() {
   const hazard = ['trap', 'tabs', 'local'].includes(type);
   const el = document.createElement('div'); el.className = `ram ram--${type}${golden ? ' golden' : ''}${hazard ? ' hazard' : ''}`;
   el.innerHTML = `<img src="./assets/${assets[type]}" alt="" />`;
-  const x = 8 + Math.random() * 84;
+  const x = hazard ? 24 + Math.random() * 52 : 18 + Math.random() * 64;
   el.style.left = `${x}%`; el.style.top = '-105px';
   el.style.transform = `rotate(${(Math.random() - .5) * 18}deg)`;
   fallZone.append(el);
-  rams.push({ el, x, y: -105, golden, hazard, type, velocity: 3 + level * .55 + Math.random() * 1.3, rotation: (Math.random() - .5) * 16 });
+  rams.push({
+    el, x, spawnX: x, y: -105, golden, hazard, type,
+    velocity: 4.6 + level * .75 + Math.random() * 1.7,
+    rotation: (Math.random() - .5) * 16,
+    sway: hazard ? .8 : 1.4,
+    phase: Math.random() * Math.PI * 2
+  });
 }
 function flash(points, x, y, danger = false) { const pop = document.createElement('span'); pop.className = `float-score${danger ? ' danger' : ''}`; pop.textContent = danger ? points : `+${points}`; pop.style.left = `${x}%`; pop.style.top = `${y}px`; floatZone.append(pop); setTimeout(() => pop.remove(), 680); }
 function loseRam(ram) {
@@ -181,16 +187,18 @@ function tick(now, currentRound) {
     const maxOnScreen = Math.min(5, level);
     if (rams.length < maxOnScreen) {
       createRam();
-      spawnDelay = Math.max(.42, 1.85 - (level - 1) * .26) * (.82 + Math.random() * .42);
+      spawnDelay = Math.max(.3, 1.28 - (level - 1) * .16) * (.82 + Math.random() * .42);
     } else {
       spawnDelay = .25;
     }
   }
   const playerBox = player.getBoundingClientRect();
   for (let i = rams.length - 1; i >= 0; i--) {
-    const ram = rams[i]; ram.y += ram.velocity * delta; ram.el.style.top = `${ram.y}px`; ram.el.style.rotate = `${ram.rotation * (ram.y / 110)}deg`;
+    const ram = rams[i]; ram.y += ram.velocity * delta;
+    ram.x = Math.max(5, Math.min(95, ram.spawnX + Math.sin(ram.y / 68 + ram.phase) * ram.sway));
+    ram.el.style.top = `${ram.y}px`; ram.el.style.left = `${ram.x}%`; ram.el.style.rotate = `${ram.rotation * (ram.y / 110)}deg`;
     const ramBox = ram.el.getBoundingClientRect();
-    const atBox = ramBox.bottom >= playerBox.top + playerBox.height * .70 && ramBox.top <= playerBox.top + playerBox.height * .80 && ramBox.right > playerBox.left + playerBox.width * .22 && ramBox.left < playerBox.right - playerBox.width * .22;
+    const atBox = ramBox.bottom >= playerBox.top + playerBox.height * .73 && ramBox.top <= playerBox.top + playerBox.height * .86 && ramBox.right > playerBox.left + playerBox.width * .35 && ramBox.left < playerBox.right - playerBox.width * .35;
     if (atBox) { catchRam(ram); rams.splice(i, 1); continue; }
     if (ram.y > fallZone.clientHeight + 60) {
       if (!ram.hazard) loseRam(ram);
