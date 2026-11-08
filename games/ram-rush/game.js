@@ -156,7 +156,7 @@ function shareText() {
   const scoreText = score.toLocaleString('en-US');
   const local = ['localhost', '127.0.0.1'].includes(location.hostname);
   const challengeUrl = new URL('/games/ram-rush/?challenge=ram', location.origin).href;
-  return `SAM WANTS YOUR RAM.\nI acquired ${scoreText} MB as a ${lastRank}. Can you take more?${local ? '' : `\n${challengeUrl}`}`;
+  return `I gave Sam Altman a box and access to your RAM.\nThis was a mistake.\n\nRAM STOLEN: ${scoreText} MB\n\nCan you keep more out of the box?${local ? '' : `\n${challengeUrl}`}`;
 }
 function end() {
   if (!active) return;
