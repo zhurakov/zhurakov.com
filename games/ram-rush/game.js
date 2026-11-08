@@ -155,7 +155,8 @@ function catchRam(ram) {
 function shareText() {
   const scoreText = score.toLocaleString('en-US');
   const local = ['localhost', '127.0.0.1'].includes(location.hostname);
-  return `I caught ${scoreText} MB in RAM RUSH as a ${lastRank}. Can you beat me?${local ? '' : `\n${location.href}`}`;
+  const challengeUrl = new URL('/games/ram-rush/?challenge=ram', location.origin).href;
+  return `SAM WANTS YOUR RAM.\nI acquired ${scoreText} MB as a ${lastRank}. Can you take more?${local ? '' : `\n${challengeUrl}`}`;
 }
 function end() {
   if (!active) return;
