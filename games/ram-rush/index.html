@@ -25,12 +25,10 @@
 
         <div id="fall-zone" class="fall-zone" aria-hidden="true"></div>
         <div id="float-zone" class="float-zone" aria-live="polite"></div>
-        <aside class="high-score" aria-label="High scores">
-          <h2>HIGH<br />SCORE</h2>
-          <ol>
-            <li><span>1.</span><b id="high-score">000000</b></li>
-            <li><span>2.</span><b>04800</b></li>
-            <li><span>3.</span><b>03150</b></li>
+        <aside class="high-score" aria-label="Global leaderboard">
+          <h2>GLOBAL<br />RANKS</h2>
+          <ol id="leaderboard">
+            <li><span>1.</span><b>LOADING</b></li>
           </ol>
         </aside>
 
@@ -45,6 +43,10 @@
           <p>THE SERVERS ARE OVERHEATING!</p>
           <h1>CATCH RAM</h1>
           <span>Don't let memory crash</span>
+          <label class="name-field" for="player-name">CALLSIGN
+            <input id="player-name" type="text" autocomplete="nickname" maxlength="16" placeholder="YOUR NAME" />
+          </label>
+          <small id="name-note">2–16 letters, numbers, spaces, _ or -</small>
           <button id="start" type="button"><span>▶</span> PLAY NOW</button>
         </section>
 
@@ -57,6 +59,7 @@
             <p id="share-caption">CAN YOU BEAT MY SCORE?</p>
             <img src="./assets/golden-ram.png" alt="Golden RAM bonus" />
           </div>
+          <p id="save-status" class="save-status" aria-live="polite">SAVING SCORE…</p>
           <div class="game-over-actions">
             <button id="share" class="share-button" type="button">SHARE ON X</button>
             <button id="copy-score" class="copy-button" type="button">COPY CHALLENGE</button>

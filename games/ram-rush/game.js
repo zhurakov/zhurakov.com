@@ -5,7 +5,7 @@ const fallZone = document.querySelector('#fall-zone');
 const floatZone = document.querySelector('#float-zone');
 const scoreEl = document.querySelector('#score');
 const scoreBlock = document.querySelector('.score-block');
-const highScoreEl = document.querySelector('#high-score');
+const leaderboardEl = document.querySelector('#leaderboard');
 const statusEl = document.querySelector('#status');
 const livesEl = document.querySelector('.lives');
 const intro = document.querySelector('#intro');
@@ -20,13 +20,15 @@ const restartButton = document.querySelector('#restart');
 const shareButton = document.querySelector('#share');
 const copyButton = document.querySelector('#copy-score');
 const hearts = [...document.querySelectorAll('.lives span')];
+const nameInput = document.querySelector('#player-name');
+const nameNote = document.querySelector('#name-note');
+const saveStatus = document.querySelector('#save-status');
 let playerPose = 'forward';
 
-let score = 0, lives = 3, playerX = 50, targetPlayerX = 50, speed = 0, active = false, lastTime = 0, spawnDelay = 0, streak = 0, roundId = 0, lastRank = 'INTERN', displayedLoad = 1;
+let score = 0, lives = 3, playerX = 50, targetPlayerX = 50, speed = 0, active = false, lastTime = 0, spawnDelay = 0, streak = 0, roundId = 0, lastRank = 'INTERN', displayedLoad = 1, playerName = '', sessionId = '';
 let rams = [];
-let highScore = Number(localStorage.getItem('ram-rush-high-score') || 0);
 const keys = new Set();
-highScoreEl.textContent = highScore.toString().padStart(6, '0');
+nameInput.value = localStorage.getItem('ram-rush-player-name') || '';
 
 function displayScore() { scoreEl.textContent = score.toString().padStart(6, '0'); }
 function setPlayerX(next) { playerX = Math.max(13, Math.min(87, next)); player.style.left = `${playerX}%`; playerFront.style.left = `${playerX}%`; }
@@ -52,6 +54,27 @@ function rankFor() {
   if (score >= 2600) return 'OPERATOR';
   return 'INTERN';
 }
+function normalizeName(value) { return value.trim().replace(/\s+/g, ' '); }
+function renderLeaderboard(entries) {
+  leaderboardEl.replaceChildren(...entries.slice(0, 5).map((entry, index) => {
+    const row = document.createElement('li');
+    row.innerHTML = `<span>${index + 1}. ${entry.name}</span><b>${Number(entry.score).toString().padStart(6, '0')}</b>`;
+    return row;
+  }));
+  if (!entries.length) leaderboardEl.innerHTML = '<li><span>NO RUNS YET</span><b>—</b></li>';
+}
+async function requestApi(path, body) {
+  const response = await fetch(`/api/ram-rush/${path}`, { method: body ? 'POST' : 'GET', headers: body ? { 'content-type': 'application/json' } : undefined, body: body ? JSON.stringify(body) : undefined });
+  if (!response.ok) throw new Error('api');
+  return response.json();
+}
+async function loadLeaderboard() { try { renderLeaderboard((await requestApi('leaderboard')).leaderboard || []); } catch { renderLeaderboard([]); } }
+function track(event) { requestApi('events', { event, sessionId }).catch(() => {}); }
+async function saveScore() {
+  saveStatus.textContent = 'SAVING SCORE…'; saveStatus.classList.remove('error');
+  try { const data = await requestApi('score', { name: playerName, score, rank: lastRank, load: loadLevel(), sessionId }); renderLeaderboard(data.leaderboard || []); saveStatus.textContent = 'SCORE LOCKED IN // GLOBAL RANKS UPDATED'; }
+  catch { saveStatus.textContent = 'SCORE NOT SAVED — TRY AGAIN'; saveStatus.classList.add('error'); }
+}
 function replayAnimation(elements, className, duration) {
   elements.forEach(element => { element.classList.remove(className); void element.offsetWidth; element.classList.add(className); });
   window.setTimeout(() => elements.forEach(element => element.classList.remove(className)), duration);
@@ -68,7 +91,10 @@ function reset() {
   displayScore(); updateHearts(); setPlayerX(50); statusEl.textContent = 'CATCH RAM. DON’T DROP IT.'; over.hidden = true;
 }
 function start() {
-  reset(); active = true; intro.hidden = true; lastTime = performance.now();
+  playerName = normalizeName(nameInput.value);
+  if (!/^[A-Za-z0-9][A-Za-z0-9 _-]{1,15}$/.test(playerName)) { nameNote.textContent = 'ENTER 2–16 LETTERS, NUMBERS, SPACES, _ OR -'; nameNote.classList.add('error'); nameInput.focus(); return; }
+  localStorage.setItem('ram-rush-player-name', playerName); nameNote.textContent = 'YOUR SCORE WILL HIT THE GLOBAL BOARD'; nameNote.classList.remove('error');
+  reset(); sessionId = crypto.randomUUID(); active = true; intro.hidden = true; lastTime = performance.now(); track('game_start');
   const currentRound = ++roundId;
   requestAnimationFrame(now => tick(now, currentRound));
 }
@@ -108,13 +134,11 @@ function end() {
   if (!active) return;
   active = false; rams.forEach(ram => ram.el.remove()); rams = [];
   lastRank = rankFor(); finalScore.textContent = score.toString().padStart(6, '0');
-  const newHighScore = score > highScore;
   resultEyebrow.textContent = `RUN COMPLETE // LOAD ${loadLevel()} REACHED`;
   resultTitle.textContent = 'SYSTEM CRASHED';
   rankLabel.textContent = `RANK // ${lastRank}`;
-  shareCaption.textContent = newHighScore ? 'NEW PERSONAL BEST — CAN YOU BEAT ME?' : `${lastRank} RUN — CAN YOU BEAT ME?`;
-  if (newHighScore) { highScore = score; localStorage.setItem('ram-rush-high-score', highScore); highScoreEl.textContent = highScore.toString().padStart(6, '0'); }
-  setTimeout(() => { over.hidden = false; }, 300);
+  shareCaption.textContent = `${lastRank} RUN — CAN YOU BEAT ME?`;
+  setTimeout(() => { over.hidden = false; saveScore(); }, 300);
 }
 function tick(now, currentRound) {
   if (!active || currentRound !== roundId) return;
@@ -178,6 +202,7 @@ game.addEventListener('pointerup', releaseTouch);
 game.addEventListener('pointercancel', releaseTouch);
 game.addEventListener('lostpointercapture', releaseTouch);
 startButton.addEventListener('click', start); restartButton.addEventListener('click', start);
+nameInput.addEventListener('keydown', event => { if (event.key === 'Enter') start(); });
 copyButton.addEventListener('click', async () => {
   try { await navigator.clipboard.writeText(shareText()); copyButton.textContent = 'COPIED!'; }
   catch { copyButton.textContent = 'COPY FAILED'; }
@@ -185,5 +210,7 @@ copyButton.addEventListener('click', async () => {
 });
 shareButton.addEventListener('click', () => {
   const intent = new URL('https://x.com/intent/tweet'); intent.searchParams.set('text', shareText());
+  track('share_click');
   window.open(intent, '_blank', 'noopener,noreferrer');
 });
+loadLeaderboard();

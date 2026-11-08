@@ -10,3 +10,22 @@ remote = true
 [[routes]]
 pattern = "zhurakov.com/api/robot"
 zone_name = "zhurakov.com"
+
+[[routes]]
+pattern = "zhurakov.com/api/ram-rush/*"
+zone_name = "zhurakov.com"
+
+[[d1_databases]]
+binding = "RAM_RUSH_DB"
+database_name = "ram-rush-data"
+database_id = "dcf1d4c4-ad1d-4d23-a2bb-e5343585e0e2"
+
+[observability]
+enabled = true
+
+[observability.logs]
+enabled = true
+
+[observability.traces]
+enabled = true
+head_sampling_rate = 0.1
