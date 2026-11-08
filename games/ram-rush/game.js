@@ -156,7 +156,7 @@ function catchRam(ram) {
 function shareText() {
   const scoreText = score.toLocaleString('en-US');
   const local = ['localhost', '127.0.0.1'].includes(location.hostname);
-  const challengeUrl = new URL('/games/ram-rush/?challenge=ram', location.origin).href;
+  const challengeUrl = new URL('/games/ram-rush/?challenge=box-2', location.origin).href;
   return `I gave Sam Altman a box and access to your RAM.\nThis was a mistake.\n\nRAM STOLEN: ${scoreText} MB\n\nCan you keep more out of the box?${local ? '' : `\n${challengeUrl}`}`;
 }
 function resultCardScore() { return score.toLocaleString('en-US').padStart(6, '0'); }
