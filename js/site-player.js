@@ -14,18 +14,82 @@
   }
 
   syncRoomVideo();
-  reduceMotion.addEventListener("change", syncRoomVideo);
 
-  const meter = document.querySelector(".music-room__meter");
+  const columns = [...document.querySelectorAll(".eq-col")];
+  const squaresPerColumn = 6;
   const radioUrl = "https://stream.zeno.fm/0r0xa792kwzuv";
   const audio = new Audio();
+  audio.crossOrigin = "anonymous";
   audio.preload = "none";
+
   let isPlaying = false;
+  let audioCtx = null;
+  let analyser = null;
+  let freq = null;
+  let raf = 0;
+  const levels = new Float32Array(columns.length).fill(1);
+
+  function paint(active) {
+    columns.forEach((col, i) => {
+      const lit = active
+        ? Math.max(1, Math.min(squaresPerColumn, Math.round(levels[i])))
+        : 1;
+      const squares = col.children;
+      for (let s = 0; s < squares.length; s += 1) {
+        squares[s].classList.toggle("is-on", s < lit);
+      }
+    });
+  }
+
+  function tick() {
+    raf = 0;
+    if (!isPlaying || !analyser || reduceMotion.matches) {
+      paint(false);
+      return;
+    }
+
+    analyser.getByteFrequencyData(freq);
+    const bins = freq.length;
+    for (let i = 0; i < columns.length; i += 1) {
+      const start = 1 + i * 2;
+      let peak = 0;
+      for (let k = start; k < Math.min(bins, start + 2); k += 1) {
+        if (freq[k] > peak) peak = freq[k];
+      }
+      const energy = Math.min(1, Math.max(0, (peak - 36) / 190));
+      const next = 1 + energy * (squaresPerColumn - 1);
+      levels[i] += (next - levels[i]) * 0.45;
+    }
+
+    paint(true);
+    raf = requestAnimationFrame(tick);
+  }
 
   function render() {
     button.classList.toggle("playing", isPlaying);
     button.textContent = isPlaying ? "Pause radio" : "Play radio";
-    meter?.classList.toggle("playing", isPlaying);
+    cancelAnimationFrame(raf);
+    raf = 0;
+    if (!isPlaying || reduceMotion.matches) {
+      levels.fill(1);
+      paint(false);
+      return;
+    }
+    paint(true);
+    raf = requestAnimationFrame(tick);
+  }
+
+  function ensureGraph() {
+    if (audioCtx) return;
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    audioCtx = new Ctx();
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 256;
+    analyser.smoothingTimeConstant = 0.8;
+    freq = new Uint8Array(analyser.frequencyBinCount);
+    const source = audioCtx.createMediaElementSource(audio);
+    source.connect(analyser);
+    analyser.connect(audioCtx.destination);
   }
 
   async function play() {
@@ -35,6 +99,8 @@
     }
 
     try {
+      ensureGraph();
+      if (audioCtx.state === "suspended") await audioCtx.resume();
       await audio.play();
       isPlaying = true;
       render();
@@ -44,25 +110,27 @@
     }
   }
 
+  function stop() {
+    isPlaying = false;
+    render();
+  }
+
   function toggle() {
     if (isPlaying) {
       audio.pause();
-      isPlaying = false;
-      render();
+      stop();
       return;
     }
 
     play();
   }
 
-  audio.addEventListener("ended", () => {
-    isPlaying = false;
+  reduceMotion.addEventListener("change", () => {
+    syncRoomVideo();
     render();
   });
-  audio.addEventListener("error", () => {
-    isPlaying = false;
-    render();
-  });
+  audio.addEventListener("ended", stop);
+  audio.addEventListener("error", stop);
   button.addEventListener("click", toggle);
   render();
 })();

@@ -75,41 +75,48 @@ body {
 }
 
 .music-room__meter {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 5px;
-  width: min(320px, 78vw);
-  height: 44px;
-  align-items: end;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 6px;
+  width: max-content;
+  max-width: 100%;
   margin: 1.4rem auto 1.3rem;
 }
 
-.music-room__meter i {
-  height: 11px;
-  border-radius: 2px 2px 0 0;
+.eq-col {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 4px;
+}
+
+.eq-col i {
+  display: block;
+  width: 12px;
+  height: 12px;
   background: #e37fd3;
-  box-shadow: 0 0 18px rgba(227, 127, 211, 0.45);
-  transform-origin: bottom;
-  animation: room-meter 1.2s ease-in-out infinite;
-  animation-play-state: paused;
+  opacity: 0;
 }
 
-.music-room__meter.playing i {
-  animation-play-state: running;
+.eq-col i.is-on {
+  opacity: 1;
+  box-shadow: 0 0 12px rgba(227, 127, 211, 0.7);
 }
 
-.music-room__meter i:nth-child(2n) {
+.eq-col:nth-child(2n) i {
   background: #389984;
-  animation-duration: 0.78s;
 }
 
-.music-room__meter i:nth-child(3n) {
+.eq-col:nth-child(2n) i.is-on {
+  box-shadow: 0 0 12px rgba(56, 153, 132, 0.7);
+}
+
+.eq-col:nth-child(3n) i {
   background: #b85212;
-  animation-duration: 1.55s;
 }
 
-.music-room__meter i:nth-child(4n) {
-  animation-delay: -0.24s;
+.eq-col:nth-child(3n) i.is-on {
+  box-shadow: 0 0 12px rgba(184, 82, 18, 0.75);
 }
 
 .play-button {
@@ -162,17 +169,6 @@ footer .github-footer-link img {
   width: 78px;
 }
 
-@keyframes room-meter {
-  0%,
-  100% {
-    transform: scaleY(0.35);
-  }
-
-  50% {
-    transform: scaleY(2.9);
-  }
-}
-
 .sr-only {
   position: absolute;
   width: 1px;
@@ -188,10 +184,6 @@ footer .github-footer-link img {
 @media (prefers-reduced-motion: reduce) {
   .music-room__video {
     display: none;
-  }
-
-  .music-room__meter i {
-    animation: none;
   }
 }
 
