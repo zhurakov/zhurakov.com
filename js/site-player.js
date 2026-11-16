@@ -43,22 +43,29 @@
 
   function tick() {
     raf = 0;
-    if (!isPlaying || !analyser || reduceMotion.matches) {
+    if (!isPlaying || !analyser) {
       paint(false);
       return;
     }
 
     analyser.getByteFrequencyData(freq);
     const bins = freq.length;
+    const peaks = new Array(columns.length);
+    let loud = 0;
     for (let i = 0; i < columns.length; i += 1) {
       const start = 1 + i * 2;
       let peak = 0;
       for (let k = start; k < Math.min(bins, start + 2); k += 1) {
         if (freq[k] > peak) peak = freq[k];
       }
-      const energy = Math.min(1, Math.max(0, (peak - 36) / 190));
-      const next = 1 + energy * (squaresPerColumn - 1);
-      levels[i] += (next - levels[i]) * 0.45;
+      peaks[i] = peak;
+      if (peak > loud) loud = peak;
+    }
+
+    const glide = reduceMotion.matches ? 1 : 0.5;
+    for (let i = 0; i < columns.length; i += 1) {
+      const next = loud < 8 ? 1 : 1 + (peaks[i] / loud) * (squaresPerColumn - 1);
+      levels[i] += (next - levels[i]) * glide;
     }
 
     paint(true);
@@ -70,7 +77,7 @@
     button.textContent = isPlaying ? "Pause radio" : "Play radio";
     cancelAnimationFrame(raf);
     raf = 0;
-    if (!isPlaying || reduceMotion.matches) {
+    if (!isPlaying) {
       levels.fill(1);
       paint(false);
       return;
