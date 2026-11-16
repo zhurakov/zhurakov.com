@@ -74,7 +74,16 @@ let pointers = [];
 let splatStack = [];
 pointers.push(new pointerPrototype());
 
-const { gl, ext } = getWebGLContext(canvas);
+const webgl = getWebGLContext(canvas);
+if (!webgl) {
+    const note = document.querySelector('.antistress-panel p');
+    if (note) note.textContent = 'WebGL is turned off in this browser, so the fluid cannot run.';
+    const controls = document.querySelector('.antistress-controls');
+    if (controls) controls.hidden = true;
+    throw new Error('WebGL unavailable');
+}
+const { gl, ext } = webgl;
+window.fluidReady = true;
 
 if (isMobile()) {
     config.DYE_RESOLUTION = 512;
@@ -93,6 +102,7 @@ function getWebGLContext (canvas) {
     const isWebGL2 = !!gl;
     if (!isWebGL2)
         gl = canvas.getContext('webgl', params) || canvas.getContext('experimental-webgl', params);
+    if (!gl) return null;
 
     let halfFloat;
     let supportLinearFiltering;
@@ -101,6 +111,7 @@ function getWebGLContext (canvas) {
         supportLinearFiltering = gl.getExtension('OES_texture_float_linear');
     } else {
         halfFloat = gl.getExtension('OES_texture_half_float');
+        if (!halfFloat) return null;
         supportLinearFiltering = gl.getExtension('OES_texture_half_float_linear');
     }
 
@@ -123,6 +134,8 @@ function getWebGLContext (canvas) {
         formatRG = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
         formatR = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
     }
+
+    if (!formatRGBA) return null;
 
     return {
         gl,

@@ -27,7 +27,7 @@ const nameNote = document.querySelector('#name-note');
 const saveStatus = document.querySelector('#save-status');
 let playerPose = 'forward';
 
-let score = 0, lives = 3, playerX = 50, targetPlayerX = 50, speed = 0, active = false, lastTime = 0, spawnDelay = 0, streak = 0, roundId = 0, lastRank = 'INTERN', displayedLoad = 1, playerName = '', sessionId = '';
+let score = 0, lives = 3, playerX = 50, targetPlayerX = 50, speed = 0, active = false, starting = false, lastTime = 0, spawnDelay = 0, streak = 0, roundId = 0, lastRank = 'INTERN', displayedLoad = 1, playerName = '', sessionId = '', ranked = false;
 let rams = [];
 const keys = new Set();
 nameInput.value = localStorage.getItem('ram-rush-player-name') || '';
@@ -70,8 +70,8 @@ function renderLeaderboard(entries) {
   }));
   if (!entries.length) leaderboardEl.innerHTML = '<li><span>NO RUNS YET</span><b>—</b></li>';
 }
-async function requestApi(path, body) {
-  const response = await fetch(`/api/ram-rush/${path}`, { method: body ? 'POST' : 'GET', headers: body ? { 'content-type': 'application/json' } : undefined, body: body ? JSON.stringify(body) : undefined });
+async function requestApi(path, body, signal) {
+  const response = await fetch(`/api/ram-rush/${path}`, { method: body ? 'POST' : 'GET', headers: body ? { 'content-type': 'application/json' } : undefined, body: body ? JSON.stringify(body) : undefined, signal });
   if (!response.ok) throw new Error('api');
   return response.json();
 }
@@ -79,7 +79,8 @@ async function loadLeaderboard() { try { renderLeaderboard((await requestApi('le
 function track(event) { requestApi('events', { event, sessionId }).catch(() => {}); }
 async function saveScore() {
   saveStatus.textContent = 'SAVING SCORE…'; saveStatus.classList.remove('error');
-  try { const data = await requestApi('score', { name: playerName, score, rank: lastRank, load: loadLevel(), sessionId }); renderLeaderboard(data.leaderboard || []); saveStatus.textContent = 'SCORE LOCKED IN // GLOBAL RANKS UPDATED'; }
+  if (!ranked) { saveStatus.textContent = 'SCORE NOT SAVED — TRY AGAIN'; saveStatus.classList.add('error'); return; }
+  try { const data = await requestApi('score', { name: playerName, score, sessionId }); renderLeaderboard(data.leaderboard || []); saveStatus.textContent = 'SCORE LOCKED IN // GLOBAL RANKS UPDATED'; }
   catch { saveStatus.textContent = 'SCORE NOT SAVED — TRY AGAIN'; saveStatus.classList.add('error'); }
 }
 function replayAnimation(elements, className, duration) {
@@ -97,11 +98,14 @@ function reset() {
   setPlayerPose('forward');
   displayScore(); updateHearts(); setPlayerX(50); statusEl.textContent = 'ACQUIRE RAM. AVOID TRAPS.'; over.hidden = true;
 }
-function start() {
+async function start() {
+  if (active || starting) return;
   playerName = normalizeName(nameInput.value);
   if (!/^[A-Za-z0-9][A-Za-z0-9 _-]{1,15}$/.test(playerName)) { nameNote.textContent = 'ENTER 2–16 LETTERS, NUMBERS, SPACES, _ OR -'; nameNote.classList.add('error'); nameInput.focus(); return; }
   localStorage.setItem('ram-rush-player-name', playerName); nameNote.textContent = 'YOUR SCORE WILL HIT THE GLOBAL BOARD'; nameNote.classList.remove('error');
-  reset(); sessionId = crypto.randomUUID(); active = true; intro.hidden = true; lastTime = performance.now(); track('game_start');
+  starting = true; reset(); sessionId = crypto.randomUUID(); ranked = false;
+  try { await requestApi('events', { event: 'game_start', sessionId }, AbortSignal.timeout(4000)); ranked = true; } catch { ranked = false; }
+  starting = false; active = true; intro.hidden = true; lastTime = performance.now();
   const currentRound = ++roundId;
   requestAnimationFrame(now => tick(now, currentRound));
 }

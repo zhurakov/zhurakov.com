@@ -52,27 +52,29 @@
 
     <script src="fluid.js"></script>
     <script>
-      const pauseButton = document.querySelector('#fluid-pause');
-      const splatButton = document.querySelector('#fluid-splat');
+      if (window.fluidReady) {
+        const pauseButton = document.querySelector('#fluid-pause');
+        const splatButton = document.querySelector('#fluid-splat');
 
-      function syncPauseButton() {
-        pauseButton.textContent = config.PAUSED ? 'Resume' : 'Pause';
-        pauseButton.setAttribute('aria-pressed', String(config.PAUSED));
+        function syncPauseButton() {
+          pauseButton.textContent = config.PAUSED ? 'Resume' : 'Pause';
+          pauseButton.setAttribute('aria-pressed', String(config.PAUSED));
+        }
+
+        pauseButton.addEventListener('click', () => {
+          config.PAUSED = !config.PAUSED;
+          syncPauseButton();
+        });
+
+        splatButton.addEventListener('click', () => {
+          splatStack.push(Math.floor(Math.random() * 16) + 8);
+        });
+
+        window.addEventListener('keydown', (event) => {
+          if (event.code === 'KeyP') syncPauseButton();
+          if (event.key === ' ') event.preventDefault();
+        });
       }
-
-      pauseButton.addEventListener('click', () => {
-        config.PAUSED = !config.PAUSED;
-        syncPauseButton();
-      });
-
-      splatButton.addEventListener('click', () => {
-        splatStack.push(Math.floor(Math.random() * 16) + 8);
-      });
-
-      window.addEventListener('keydown', (event) => {
-        if (event.code === 'KeyP') syncPauseButton();
-        if (event.key === ' ') event.preventDefault();
-      });
     </script>
   </body>
 </html>

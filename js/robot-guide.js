@@ -1,6 +1,6 @@
 import { robotRenderer } from "./robot-motion.js";
 import { animateBoy } from "./hero-eyes.js";
-import { askTopics, pageLabels, pages } from "./site-pages.js";
+import { askTopics, pages } from "./site-pages.js";
 const hero = document.querySelector("#hero");
 const wake = document.querySelector("#wake-robot");
 const robot = document.querySelector("#driving-robot");
@@ -180,72 +180,15 @@ visualViewport?.addEventListener("resize", () => {
 });
 const pondPage = pages.find((page) => page.label === "Pond");
 const gamesPage = pages.find((page) => page.label === "Games");
-let asking = false;
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   const value = input.value.trim();
-  if (!value || asking) return;
+  if (!value) return;
   input.value = "";
-  answer(value);
+  showLocalAnswer(value);
 });
 function isIdentityQuestion(question) {
   return /\b(nikita|yourself|who|name|called)\b|никит|кто|теб|зовут|имя/i.test(question);
-}
-async function answer(question) {
-  if (isIdentityQuestion(question)) {
-    showLocalAnswer(question);
-    return;
-  }
-  asking = true;
-  speech.textContent = "…";
-  try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 8000);
-    const response = await fetch("/api/robot", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ question }),
-      signal: controller.signal,
-    });
-    clearTimeout(timer);
-    if (!response.ok) throw new Error("status");
-    const data = await response.json();
-    if (typeof data.answer === "string" && data.answer.trim()) {
-      showModelAnswer(data.answer.trim());
-      return;
-    }
-  } catch {
-    // The short local reply covers a missing worker and a used-up daily allowance.
-  } finally {
-    asking = false;
-  }
-  showLocalAnswer(question);
-}
-function showModelAnswer(text) {
-  speech.replaceChildren();
-  const pattern = /https:\/\/(?:www\.)?zhurakov\.com[^\s)]*/g;
-  let last = 0;
-  for (const match of text.matchAll(pattern)) {
-    const raw = match[0].replace(/[.,;:!?]+$/, "");
-    let url;
-    try {
-      url = new URL(raw);
-    } catch {
-      continue;
-    }
-    const pathname = url.pathname.endsWith("/") && url.pathname !== "/"
-      ? url.pathname
-      : url.pathname.replace(/\/$/, "") || "/";
-    const label = pageLabels.get(url.pathname) || pageLabels.get(pathname);
-    if (url.protocol !== "https:" || !label) continue;
-    speech.append(text.slice(last, match.index));
-    const link = document.createElement("a");
-    link.href = url.pathname;
-    link.textContent = label;
-    speech.append(link);
-    last = match.index + raw.length;
-  }
-  speech.append(text.slice(last));
 }
 function showPageLink(before, page, label, after) {
   const link = document.createElement("a");
