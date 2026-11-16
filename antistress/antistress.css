@@ -18,7 +18,7 @@ html, body { height: 100%; margin: 0; overflow: hidden; }
 
 canvas { display: block; width: 100%; height: 100%; touch-action: none; }
 
-.antistress-header, .antistress-panel, .fluid-credit {
+.antistress-header, .antistress-panel, footer {
   position: fixed;
   z-index: 1;
   font-size: clamp(0.56rem, 1.4vw, 0.76rem);
@@ -41,7 +41,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid #e37fd3; outline-offs
 
 .antistress-panel {
   left: 1.5rem;
-  bottom: 5.2rem;
+  bottom: 1.5rem;
   max-width: min(22rem, calc(100vw - 3rem));
 }
 
@@ -61,25 +61,13 @@ button {
 
 button:hover { color: #02050d; background: #ffffff; border-color: #ffffff; }
 
-.fluid-credit { right: 1.5rem; bottom: 5.2rem; max-width: min(26rem, calc(100vw - 3rem)); margin: 0; text-align: right; }
-
-.site-footer {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 2;
-  background: rgba(2, 5, 13, 0.78);
-  text-shadow: none;
-  font-size: 16px;
-  line-height: 1.4;
-  text-align: center;
-}
+footer { right: 1.5rem; bottom: 1.5rem; max-width: min(26rem, calc(100vw - 3rem)); text-align: right; }
+footer p { margin: 0; }
 
 @media (max-width: 640px) {
   .antistress-header { inset: 1rem 1rem auto; }
-  .antistress-panel { left: 1rem; bottom: 6.4rem; }
-  .fluid-credit { right: 1rem; bottom: 5.4rem; text-align: left; font-size: 0.5rem; }
+  .antistress-panel { left: 1rem; bottom: 3.8rem; }
+  footer { right: 1rem; bottom: 1rem; text-align: left; font-size: 0.5rem; }
   button { font-size: 0.54rem; padding: 0.65rem; }
 }
 
