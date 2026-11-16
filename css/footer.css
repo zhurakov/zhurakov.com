@@ -37,7 +37,8 @@ footer .brand-label picture {
   height: 48px;
 }
 
-footer .github-footer-link {
+footer .github-footer-link,
+footer .x-footer-link {
   display: inline-flex;
   align-items: center;
   min-height: 30px;
@@ -48,14 +49,22 @@ footer .github-footer-link {
   text-decoration: none;
 }
 
-footer .github-footer-link:visited {
+footer .github-footer-link:visited,
+footer .x-footer-link:visited {
   color: #fffcf5;
 }
 
-footer .github-footer-link:hover {
+footer .github-footer-link:hover,
+footer .x-footer-link:hover {
   border-color: #fffcf5;
   color: #ffffff;
   text-decoration: none;
+}
+
+footer .x-footer-link img {
+  display: block;
+  width: 18px;
+  height: 18px;
 }
 
 footer .github-footer-link img {

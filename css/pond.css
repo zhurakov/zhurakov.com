@@ -53,11 +53,20 @@ canvas {
   cursor: pointer;
 }
 
+body > footer {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 20;
+  background: rgba(0, 0, 0, 0.55);
+}
+
 .pond-credit {
   position: fixed;
   z-index: 30;
   right: max(1rem, env(safe-area-inset-right));
-  bottom: max(0.85rem, env(safe-area-inset-bottom));
+  bottom: calc(4.6rem + env(safe-area-inset-bottom));
   margin: 0;
   color: #c3ccaf;
   font-family: "Press Start 2P", monospace;
