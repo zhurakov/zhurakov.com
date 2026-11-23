@@ -111,12 +111,6 @@
     }
   }
 
-  function emitChange(choice) {
-    window.dispatchEvent(
-      new CustomEvent("analytics-consent-changed", { detail: { choice } }),
-    );
-  }
-
   function buildControls() {
     const panel = document.createElement("section");
     panel.className = "privacy-panel";
@@ -168,8 +162,6 @@
           window.setTimeout(() => window.location.reload(), 100);
         }
       }
-
-      emitChange(choice);
     });
 
     panel.addEventListener("keydown", (event) => {

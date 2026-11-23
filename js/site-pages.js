@@ -1,9 +1,5 @@
 export const pages = [
   {
-    label: "Home",
-    path: "/",
-  },
-  {
     label: "Pond",
     path: "/posts/pond.html",
     suggest: true,
@@ -27,10 +23,6 @@ export const pages = [
     label: "Links",
     path: "/posts/links.html",
     suggest: true,
-  },
-  {
-    label: "Privacy",
-    path: "/privacy.html",
   },
 ];
 

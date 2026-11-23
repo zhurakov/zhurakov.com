@@ -32,7 +32,6 @@ resizeCanvas();
 let config = {
     SIM_RESOLUTION: 128,
     DYE_RESOLUTION: 1024,
-    CAPTURE_RESOLUTION: 512,
     DENSITY_DISSIPATION: 1,
     VELOCITY_DISSIPATION: 0.2,
     PRESSURE: 0.8,
@@ -45,7 +44,6 @@ let config = {
     COLOR_UPDATE_SPEED: 10,
     PAUSED: false,
     BACK_COLOR: { r: 0, g: 0, b: 0 },
-    TRANSPARENT: false,
     BLOOM: true,
     BLOOM_ITERATIONS: 8,
     BLOOM_RESOLUTION: 256,
@@ -189,70 +187,6 @@ function supportRenderTextureFormat (gl, internalFormat, format, type) {
 
 function isMobile () {
     return /Mobi|Android/i.test(navigator.userAgent);
-}
-
-function captureScreenshot () {
-    let res = getResolution(config.CAPTURE_RESOLUTION);
-    let target = createFBO(res.width, res.height, ext.formatRGBA.internalFormat, ext.formatRGBA.format, ext.halfFloatTexType, gl.NEAREST);
-    render(target);
-
-    let texture = framebufferToTexture(target);
-    texture = normalizeTexture(texture, target.width, target.height);
-
-    let captureCanvas = textureToCanvas(texture, target.width, target.height);
-    let datauri = captureCanvas.toDataURL();
-    downloadURI('fluid.png', datauri);
-    URL.revokeObjectURL(datauri);
-}
-
-function framebufferToTexture (target) {
-    gl.bindFramebuffer(gl.FRAMEBUFFER, target.fbo);
-    let length = target.width * target.height * 4;
-    let texture = new Float32Array(length);
-    gl.readPixels(0, 0, target.width, target.height, gl.RGBA, gl.FLOAT, texture);
-    return texture;
-}
-
-function normalizeTexture (texture, width, height) {
-    let result = new Uint8Array(texture.length);
-    let id = 0;
-    for (let i = height - 1; i >= 0; i--) {
-        for (let j = 0; j < width; j++) {
-            let nid = i * width * 4 + j * 4;
-            result[nid + 0] = clamp01(texture[id + 0]) * 255;
-            result[nid + 1] = clamp01(texture[id + 1]) * 255;
-            result[nid + 2] = clamp01(texture[id + 2]) * 255;
-            result[nid + 3] = clamp01(texture[id + 3]) * 255;
-            id += 4;
-        }
-    }
-    return result;
-}
-
-function clamp01 (input) {
-    return Math.min(Math.max(input, 0), 1);
-}
-
-function textureToCanvas (texture, width, height) {
-    let captureCanvas = document.createElement('canvas');
-    let ctx = captureCanvas.getContext('2d');
-    captureCanvas.width = width;
-    captureCanvas.height = height;
-
-    let imageData = ctx.createImageData(width, height);
-    imageData.data.set(texture);
-    ctx.putImageData(imageData, 0, 0);
-
-    return captureCanvas;
-}
-
-function downloadURI (filename, uri) {
-    let link = document.createElement('a');
-    link.download = filename;
-    link.href = uri;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
 }
 
 class Material {
@@ -432,24 +366,6 @@ const colorShader = compileShader(gl.FRAGMENT_SHADER, `
 
     void main () {
         gl_FragColor = color;
-    }
-`);
-
-const checkerboardShader = compileShader(gl.FRAGMENT_SHADER, `
-    precision highp float;
-    precision highp sampler2D;
-
-    varying vec2 vUv;
-    uniform sampler2D uTexture;
-    uniform float aspectRatio;
-
-    #define SCALE 25.0
-
-    void main () {
-        vec2 uv = floor(vUv * SCALE * vec2(aspectRatio, 1.0));
-        float v = mod(uv.x + uv.y, 2.0);
-        v = v * 0.1 + 0.8;
-        gl_FragColor = vec4(vec3(v), 1.0);
     }
 `);
 
@@ -843,16 +759,9 @@ const blit = (() => {
             gl.clearColor(0.0, 0.0, 0.0, 1.0);
             gl.clear(gl.COLOR_BUFFER_BIT);
         }
-        // CHECK_FRAMEBUFFER_STATUS();
         gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
     }
 })();
-
-function CHECK_FRAMEBUFFER_STATUS () {
-    let status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-    if (status != gl.FRAMEBUFFER_COMPLETE)
-        console.trace("Framebuffer error: " + status);
-}
 
 let dye;
 let velocity;
@@ -870,7 +779,6 @@ const blurProgram            = new Program(blurVertexShader, blurShader);
 const copyProgram            = new Program(baseVertexShader, copyShader);
 const clearProgram           = new Program(baseVertexShader, clearShader);
 const colorProgram           = new Program(baseVertexShader, colorShader);
-const checkerboardProgram    = new Program(baseVertexShader, checkerboardShader);
 const bloomPrefilterProgram  = new Program(baseVertexShader, bloomPrefilterShader);
 const bloomBlurProgram       = new Program(baseVertexShader, bloomBlurShader);
 const bloomFinalProgram      = new Program(baseVertexShader, bloomFinalShader);
@@ -1216,30 +1124,15 @@ function render (target) {
         blur(sunrays, sunraysTemp, 1);
     }
 
-    if (target == null || !config.TRANSPARENT) {
-        gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-        gl.enable(gl.BLEND);
-    }
-    else {
-        gl.disable(gl.BLEND);
-    }
-
-    if (!config.TRANSPARENT)
-        drawColor(target, normalizeColor(config.BACK_COLOR));
-    if (target == null && config.TRANSPARENT)
-        drawCheckerboard(target);
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    gl.enable(gl.BLEND);
+    drawColor(target, normalizeColor(config.BACK_COLOR));
     drawDisplay(target);
 }
 
 function drawColor (target, color) {
     colorProgram.bind();
     gl.uniform4f(colorProgram.uniforms.color, color.r, color.g, color.b, 1);
-    blit(target);
-}
-
-function drawCheckerboard (target) {
-    checkerboardProgram.bind();
-    gl.uniform1f(checkerboardProgram.uniforms.aspectRatio, canvas.width / canvas.height);
     blit(target);
 }
 
